@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   View,
   Text,
@@ -8,37 +8,47 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  ActivityIndicator,
+  BackHandler,
+  Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInDown } from "react-native-reanimated";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
+
+import { useAuthStore } from "@/store/useAuthStore";
+
+import Spinner from "@/components/Spinner";
 
 export default function LoginScreen() {
-  const [email, setEmail] = useState("");
+  const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const { login, isLoading } = useAuthStore();
 
-  const handleLogin = () => {
-    setIsLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
+  const handleBackPress = () => {
+    Alert.alert("Exit Shiona Music App", "Are you sure you want to quit?", [
+      {
+        text: "Cancel",
+        onPress: () => null,
+        style: "cancel",
+      },
+      { text: "YES", onPress: () => BackHandler.exitApp() },
+    ]);
+    return true;
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      BackHandler.addEventListener("hardwareBackPress", handleBackPress);
+
+      return () => {
+        BackHandler.removeEventListener("hardwareBackPress", handleBackPress);
+      };
+    }, [])
+  );
 
   return (
     <SafeAreaView className="flex-1 bg-[#463838]">
-      {/* Loading Spinner */}
-      {isLoading && (
-        <View className="absolute z-50 w-full h-full justify-center items-center">
-          <View className="absolute w-full h-full bg-black opacity-40" />
-          <ActivityIndicator
-            size="large"
-            color="#fff"
-          />
-        </View>
-      )}
+      {isLoading && <Spinner />}
 
       <KeyboardAvoidingView
         style={{ flex: 1 }}
@@ -65,11 +75,10 @@ export default function LoginScreen() {
             <Animated.View
               entering={FadeInDown.delay(200).duration(300).springify()}>
               <TextInput
-                placeholder="Email"
+                placeholder="Username"
                 placeholderTextColor="#aaa"
-                keyboardType="email-address"
-                value={email}
-                onChangeText={setEmail}
+                value={user}
+                onChangeText={setUser}
                 className="bg-[#1E1E1E] text-white px-4 py-3 rounded-2xl mb-4 border border-[#2a2a2a]"
               />
             </Animated.View>
@@ -92,7 +101,7 @@ export default function LoginScreen() {
               entering={FadeInDown.delay(400).duration(300).springify()}>
               <TouchableOpacity
                 className="bg-red-600 rounded-2xl py-3 mb-4 items-center"
-                onPress={handleLogin}
+                onPress={() => login(user, password)}
                 disabled={isLoading}>
                 <Text className="text-white text-lg font-semibold">Login</Text>
               </TouchableOpacity>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   View,
   Text,
@@ -8,38 +8,35 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  ActivityIndicator,
+  Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { router } from "expo-router";
+import { useAuthStore } from "@/store/useAuthStore";
+import Spinner from "@/components/Spinner";
 
 export default function RegisterScreen() {
-  const [email, setEmail] = useState("");
+  const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const { register, isLoading } = useAuthStore();
 
-  const handleRegister = () => {
-    setIsLoading(true);
-    // Simulate registration call
-    setTimeout(() => {
-      setIsLoading(false);
-      // Proceed with actual registration logic
-    }, 2000);
+  const handleRegister = async () => {
+    if (!user || !password || !confirmPassword) {
+      Alert.alert("Missing Fields", "Please fill in all fields.");
+      return;
+    } else if (password !== confirmPassword) {
+      Alert.alert("Password Mismatch", "Passwords do not match.");
+      return;
+    } else {
+      register(user, password);
+    }
   };
 
   return (
     <SafeAreaView className="flex-1 bg-[#463838]">
-      {isLoading && (
-        <View className="absolute z-50 w-full h-full justify-center items-center">
-          <View className="absolute w-full h-full bg-black opacity-40" />
-          <ActivityIndicator
-            size="large"
-            color="#fff"
-          />
-        </View>
-      )}
+      {isLoading && <Spinner />}
 
       <KeyboardAvoidingView
         style={{ flex: 1 }}
@@ -65,11 +62,10 @@ export default function RegisterScreen() {
             {/* Email Input */}
             <Animated.View entering={FadeInDown.delay(200).springify()}>
               <TextInput
-                placeholder="Email"
+                placeholder="Username"
                 placeholderTextColor="#aaa"
-                keyboardType="email-address"
-                value={email}
-                onChangeText={setEmail}
+                value={user}
+                onChangeText={setUser}
                 className="bg-[#1E1E1E] text-white px-4 py-3 rounded-2xl mb-4 border border-[#2a2a2a]"
               />
             </Animated.View>
