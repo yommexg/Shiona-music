@@ -1,9 +1,9 @@
-import { View, Text, ActivityIndicator } from "react-native";
+import { View, ActivityIndicator, StyleSheet } from "react-native";
 
 const Spinner = () => {
   return (
-    <View className="absolute z-50 w-full h-full justify-center items-center">
-      <View className="absolute w-full h-full bg-black opacity-40" />
+    <View style={styles.container}>
+      <View style={styles.overlay} />
       <ActivityIndicator
         size="large"
         color="#fff"
@@ -13,3 +13,21 @@ const Spinner = () => {
 };
 
 export default Spinner;
+
+const styles = StyleSheet.create({
+  container: {
+    position: "absolute",
+    zIndex: 50,
+    width: "100%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  overlay: {
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+    backgroundColor: "black",
+    opacity: 0.4,
+  },
+});

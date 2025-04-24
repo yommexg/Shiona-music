@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { View, Text, Image, TouchableOpacity } from "react-native";
+import { MusicOptions } from "./Options";
 
 const Header = () => {
   return (
@@ -16,14 +17,14 @@ const Header = () => {
           Shiona Music
         </Text>
       </View>
-
-      <Ionicons
-        name="options"
-        size={27}
-        color="red"
-        onPress={() => {}}
-        style={{ paddingRight: 10 }}
-      />
+      <MusicOptions>
+        <Ionicons
+          name="options"
+          size={30}
+          color="red"
+          style={{ paddingRight: 10 }}
+        />
+      </MusicOptions>
     </View>
   );
 };

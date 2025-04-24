@@ -1,7 +1,8 @@
 import { Tabs } from "expo-router";
 import { FontAwesome, FontAwesome6, Ionicons } from "@expo/vector-icons";
+import { MenuProvider } from "react-native-popup-menu";
 
-export default function TabLayout() {
+function MusicTabs() {
   return (
     <Tabs
       screenOptions={{
@@ -75,5 +76,12 @@ export default function TabLayout() {
         }}
       />
     </Tabs>
+  );
+}
+export default function TabLayout() {
+  return (
+    <MenuProvider>
+      <MusicTabs />
+    </MenuProvider>
   );
 }
