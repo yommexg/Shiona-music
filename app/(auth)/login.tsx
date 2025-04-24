@@ -47,7 +47,7 @@ export default function LoginScreen() {
   );
 
   return (
-    <SafeAreaView className="flex-1 bg-[#463838]">
+    <SafeAreaView className="flex-1 bg-[#2c2222]">
       {isLoading && <Spinner />}
 
       <KeyboardAvoidingView

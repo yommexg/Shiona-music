@@ -41,7 +41,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       if (response.ok) {
         await AsyncStorage.setItem("token", data.token);
         set({ user, token: data.token });
-        router.push("/(user)");
+        router.push("/(tabs)");
       } else {
         Alert.alert("Login Failed", "Oops !!, Something went wrong");
         // throw new Error(data.message || "Login failed");
@@ -94,7 +94,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     const token = await AsyncStorage.getItem("token");
     if (token) {
       set({ token });
-      router.push("/(user)");
+      router.push("/(tabs)");
     } else {
       router.push("/login");
     }

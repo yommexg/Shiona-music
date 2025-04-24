@@ -37,7 +37,7 @@ export default function RootLayout() {
           }}
         />
         <Stack.Screen
-          name="(user)"
+          name="(tabs)"
           options={{
             headerShown: false,
           }}
