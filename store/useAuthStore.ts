@@ -41,7 +41,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       if (response.ok) {
         await AsyncStorage.setItem("token", data.token);
         set({ user, token: data.token });
-        router.push("/(tabs)");
+        router.replace("/(tabs)/(songs)");
       } else {
         Alert.alert("Login Failed", "Oops !!, Something went wrong");
         // throw new Error(data.message || "Login failed");
@@ -85,7 +85,6 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   logout: async () => {
     await AsyncStorage.removeItem("token");
-    await AsyncStorage.removeItem("user");
     set({ token: null });
     router.push("/login");
   },
@@ -94,9 +93,9 @@ export const useAuthStore = create<AuthState>((set) => ({
     const token = await AsyncStorage.getItem("token");
     if (token) {
       set({ token });
-      router.push("/(tabs)");
+      router.replace("/(tabs)/(songs)");
     } else {
-      router.push("/login");
+      router.replace("/(auth)/login");
     }
   },
 }));

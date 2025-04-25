@@ -10,13 +10,13 @@ import {
   ScrollView,
   BackHandler,
   Alert,
+  StyleSheet,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { router, useFocusEffect } from "expo-router";
 
 import { useAuthStore } from "@/store/useAuthStore";
-
 import Spinner from "@/components/Spinner";
 
 export default function LoginScreen() {
@@ -26,11 +26,7 @@ export default function LoginScreen() {
 
   const handleBackPress = () => {
     Alert.alert("Exit Shiona Music App", "Are you sure you want to quit?", [
-      {
-        text: "Cancel",
-        onPress: () => null,
-        style: "cancel",
-      },
+      { text: "Cancel", style: "cancel" },
       { text: "YES", onPress: () => BackHandler.exitApp() },
     ]);
     return true;
@@ -39,7 +35,6 @@ export default function LoginScreen() {
   useFocusEffect(
     useCallback(() => {
       BackHandler.addEventListener("hardwareBackPress", handleBackPress);
-
       return () => {
         BackHandler.removeEventListener("hardwareBackPress", handleBackPress);
       };
@@ -47,7 +42,7 @@ export default function LoginScreen() {
   );
 
   return (
-    <SafeAreaView className="flex-1 bg-[#2c2222]">
+    <SafeAreaView style={styles.container}>
       {isLoading && <Spinner />}
 
       <KeyboardAvoidingView
@@ -56,22 +51,20 @@ export default function LoginScreen() {
         <ScrollView
           contentContainerStyle={{ flexGrow: 1 }}
           keyboardShouldPersistTaps="handled">
-          <View className="flex-1 justify-center px-6">
+          <View style={styles.innerContainer}>
             {/* Logo and Title */}
             <Animated.View
-              className="items-center mb-10"
+              style={styles.logoContainer}
               entering={FadeInDown.duration(200).springify()}>
               <Image
                 source={require("@/assets/images/icon.png")}
-                className="w-36 h-36 mb-4"
+                style={styles.logo}
                 resizeMode="contain"
               />
-              <Text className="text-white text-3xl font-bold italic tracking-wide">
-                Shiona Music
-              </Text>
+              <Text style={styles.title}>Shiona Music</Text>
             </Animated.View>
 
-            {/* Email Input */}
+            {/* Username Input */}
             <Animated.View
               entering={FadeInDown.delay(200).duration(300).springify()}>
               <TextInput
@@ -79,7 +72,7 @@ export default function LoginScreen() {
                 placeholderTextColor="#aaa"
                 value={user}
                 onChangeText={setUser}
-                className="bg-[#1E1E1E] text-white px-4 py-3 rounded-2xl mb-4 border border-[#2a2a2a]"
+                style={styles.input}
               />
             </Animated.View>
 
@@ -92,7 +85,7 @@ export default function LoginScreen() {
                 secureTextEntry
                 value={password}
                 onChangeText={setPassword}
-                className="bg-[#1E1E1E] text-white px-4 py-3 rounded-2xl mb-6 border border-[#2a2a2a]"
+                style={styles.input}
               />
             </Animated.View>
 
@@ -100,20 +93,20 @@ export default function LoginScreen() {
             <Animated.View
               entering={FadeInDown.delay(400).duration(300).springify()}>
               <TouchableOpacity
-                className="bg-red-600 rounded-2xl py-3 mb-4 items-center"
+                style={styles.loginButton}
                 onPress={() => login(user, password)}
                 disabled={isLoading}>
-                <Text className="text-white text-lg font-semibold">Login</Text>
+                <Text style={styles.loginText}>Login</Text>
               </TouchableOpacity>
             </Animated.View>
 
-            {/* Sign Up */}
+            {/* Sign Up Prompt */}
             <Animated.View
-              className="flex-row justify-center mt-6"
+              style={styles.signupRow}
               entering={FadeInDown.delay(600).duration(300).springify()}>
-              <Text className="text-gray-400">Don't have an account?</Text>
+              <Text style={styles.signupText}>Don't have an account?</Text>
               <TouchableOpacity onPress={() => router.push("/register")}>
-                <Text className="text-red-500 font-semibold ml-1">Sign Up</Text>
+                <Text style={styles.signupLink}>Sign Up</Text>
               </TouchableOpacity>
             </Animated.View>
           </View>
@@ -122,3 +115,66 @@ export default function LoginScreen() {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#2c2222",
+  },
+  innerContainer: {
+    flex: 1,
+    justifyContent: "center",
+    paddingHorizontal: 24,
+  },
+  logoContainer: {
+    alignItems: "center",
+    marginBottom: 40,
+  },
+  logo: {
+    width: 144,
+    height: 144,
+    marginBottom: 16,
+  },
+  title: {
+    color: "white",
+    fontSize: 28,
+    fontWeight: "bold",
+    fontStyle: "italic",
+    letterSpacing: 1,
+  },
+  input: {
+    backgroundColor: "#1E1E1E",
+    color: "white",
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 16,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: "#2a2a2a",
+  },
+  loginButton: {
+    backgroundColor: "#dc2626",
+    borderRadius: 16,
+    paddingVertical: 12,
+    alignItems: "center",
+    marginBottom: 16,
+  },
+  loginText: {
+    color: "white",
+    fontSize: 18,
+    fontWeight: "600",
+  },
+  signupRow: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginTop: 24,
+  },
+  signupText: {
+    color: "#a1a1aa",
+  },
+  signupLink: {
+    color: "#ef4444",
+    fontWeight: "600",
+    marginLeft: 4,
+  },
+});

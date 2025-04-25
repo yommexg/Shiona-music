@@ -1,28 +1,24 @@
 import { Ionicons } from "@expo/vector-icons";
-import { View, Text, Image, TouchableOpacity } from "react-native";
+import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { MusicOptions } from "./Options";
 
 const Header = () => {
   return (
-    <View
-      className="px-4 py-4 rounded-b-2xl shadow-lg shadow-black/30  flex-row justify-between items-center"
-      style={{ justifyContent: "space-between" }}>
-      <View className="flex-row items-center">
+    <View style={styles.container}>
+      <View style={styles.leftSection}>
         <Image
           source={require("@/assets/images/icon.png")}
-          className="w-20 h-20 mr-3"
+          style={styles.logo}
           resizeMode="contain"
         />
-        <Text className="text-white text-xl font-bold tracking-wide">
-          Shiona Music
-        </Text>
+        <Text style={styles.title}>Shiona Music</Text>
       </View>
       <MusicOptions>
         <Ionicons
           name="options"
           size={30}
           color="red"
-          style={{ paddingRight: 10 }}
+          style={styles.icon}
         />
       </MusicOptions>
     </View>
@@ -30,3 +26,39 @@ const Header = () => {
 };
 
 export default Header;
+
+const styles = StyleSheet.create({
+  container: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    backgroundColor: "transparent",
+    shadowColor: "black",
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  leftSection: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  logo: {
+    width: 80,
+    height: 80,
+    marginRight: 12,
+  },
+  title: {
+    color: "white",
+    fontSize: 20,
+    fontWeight: "bold",
+    letterSpacing: 0.5,
+  },
+  icon: {
+    paddingRight: 10,
+  },
+});

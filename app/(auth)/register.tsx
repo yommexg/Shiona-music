@@ -9,6 +9,7 @@ import {
   Platform,
   ScrollView,
   Alert,
+  StyleSheet,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInDown } from "react-native-reanimated";
@@ -35,7 +36,7 @@ export default function RegisterScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-[#2c2222]">
+    <SafeAreaView style={styles.container}>
       {isLoading && <Spinner />}
 
       <KeyboardAvoidingView
@@ -44,29 +45,27 @@ export default function RegisterScreen() {
         <ScrollView
           contentContainerStyle={{ flexGrow: 1 }}
           keyboardShouldPersistTaps="handled">
-          <View className="flex-1 justify-center px-6">
+          <View style={styles.innerContainer}>
             {/* Logo and Title */}
             <Animated.View
-              className="items-center mb-10"
+              style={styles.logoContainer}
               entering={FadeInDown.springify()}>
               <Image
                 source={require("@/assets/images/icon.png")}
-                className="w-36 h-36 mb-4"
+                style={styles.logo}
                 resizeMode="contain"
               />
-              <Text className="text-white text-3xl font-bold italic tracking-wide">
-                Shiona Music
-              </Text>
+              <Text style={styles.title}>Shiona Music</Text>
             </Animated.View>
 
-            {/* Email Input */}
+            {/* Username Input */}
             <Animated.View entering={FadeInDown.delay(200).springify()}>
               <TextInput
                 placeholder="Username"
                 placeholderTextColor="#aaa"
                 value={user}
                 onChangeText={setUser}
-                className="bg-[#1E1E1E] text-white px-4 py-3 rounded-2xl mb-4 border border-[#2a2a2a]"
+                style={styles.input}
               />
             </Animated.View>
 
@@ -78,7 +77,7 @@ export default function RegisterScreen() {
                 secureTextEntry
                 value={password}
                 onChangeText={setPassword}
-                className="bg-[#1E1E1E] text-white px-4 py-3 rounded-2xl mb-4 border border-[#2a2a2a]"
+                style={styles.input}
               />
             </Animated.View>
 
@@ -90,29 +89,27 @@ export default function RegisterScreen() {
                 secureTextEntry
                 value={confirmPassword}
                 onChangeText={setConfirmPassword}
-                className="bg-[#1E1E1E] text-white px-4 py-3 rounded-2xl mb-6 border border-[#2a2a2a]"
+                style={styles.input}
               />
             </Animated.View>
 
             {/* Register Button */}
             <Animated.View entering={FadeInDown.delay(500).springify()}>
               <TouchableOpacity
-                className="bg-red-600 rounded-2xl py-3 mb-4 items-center"
+                style={styles.button}
                 onPress={handleRegister}
                 disabled={isLoading}>
-                <Text className="text-white text-lg font-semibold">
-                  Register
-                </Text>
+                <Text style={styles.buttonText}>Register</Text>
               </TouchableOpacity>
             </Animated.View>
 
-            {/* Already have an account */}
+            {/* Login Link */}
             <Animated.View
-              className="flex-row justify-center mt-6"
+              style={styles.loginRow}
               entering={FadeInDown.delay(600).springify()}>
-              <Text className="text-gray-400">Already have an account?</Text>
+              <Text style={styles.loginText}>Already have an account?</Text>
               <TouchableOpacity onPress={() => router.push("/login")}>
-                <Text className="text-red-500 font-semibold ml-1">Login</Text>
+                <Text style={styles.loginLink}>Login</Text>
               </TouchableOpacity>
             </Animated.View>
           </View>
@@ -121,3 +118,66 @@ export default function RegisterScreen() {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#2c2222",
+  },
+  innerContainer: {
+    flex: 1,
+    justifyContent: "center",
+    paddingHorizontal: 24,
+  },
+  logoContainer: {
+    alignItems: "center",
+    marginBottom: 40,
+  },
+  logo: {
+    width: 144,
+    height: 144,
+    marginBottom: 16,
+  },
+  title: {
+    color: "white",
+    fontSize: 28,
+    fontWeight: "bold",
+    fontStyle: "italic",
+    letterSpacing: 1,
+  },
+  input: {
+    backgroundColor: "#1E1E1E",
+    color: "white",
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 16,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: "#2a2a2a",
+  },
+  button: {
+    backgroundColor: "#dc2626",
+    borderRadius: 16,
+    paddingVertical: 12,
+    alignItems: "center",
+    marginBottom: 16,
+  },
+  buttonText: {
+    color: "white",
+    fontSize: 18,
+    fontWeight: "600",
+  },
+  loginRow: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginTop: 24,
+  },
+  loginText: {
+    color: "#a1a1aa",
+  },
+  loginLink: {
+    color: "#ef4444",
+    fontWeight: "600",
+    marginLeft: 4,
+  },
+});

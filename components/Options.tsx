@@ -6,24 +6,29 @@ import {
   MenuTrigger,
   MenuOption,
 } from "react-native-popup-menu";
+
 import { useAuthStore } from "@/store/useAuthStore";
+import { useAudioStore } from "@/store/useAudioStore";
 
 type MusicOptionsProps = PropsWithChildren<{}>;
 
 export const MusicOptions = ({ children }: MusicOptionsProps) => {
   const { logout } = useAuthStore();
+  const { pauseTrack } = useAudioStore();
 
   const handlePressAction = async (id: string) => {
     switch (id) {
-      // For Students
-      case "":
-        // router.push(
-        //   `/(student)/(courses)/studentCourse/(studentDetails)/${courseId}&&&Enrolled Courses`
-        // );
-        break;
+      // // For Students
+      // case "":
+      //   // router.push(
+      //   //   `/(student)/(courses)/studentCourse/(studentDetails)/${courseId}&&&Enrolled Courses`
+      //   // );
+      //   break;
 
       case "logout":
+        pauseTrack();
         logout();
+        break;
 
       default:
         console.warn(`Unknown menu action ${id}`);

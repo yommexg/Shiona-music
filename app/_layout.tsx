@@ -3,6 +3,8 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
+import { MenuProvider } from "react-native-popup-menu";
+
 import "react-native-reanimated";
 
 import "@/styles/global.css";
@@ -28,7 +30,7 @@ export default function RootLayout() {
   }
 
   return (
-    <>
+    <MenuProvider>
       <Stack>
         <Stack.Screen
           name="(auth)"
@@ -45,6 +47,6 @@ export default function RootLayout() {
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="light" />
-    </>
+    </MenuProvider>
   );
 }
