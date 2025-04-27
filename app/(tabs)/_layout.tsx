@@ -1,8 +1,21 @@
 import { Tabs } from "expo-router";
 import { FontAwesome, FontAwesome6, Ionicons } from "@expo/vector-icons";
 import FloatingPlayer from "@/components/FloatingPlayer";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useMusicStore } from "@/store/useMusicStore";
+import { useEffect } from "react";
 
 export default function TabLayout() {
+  const { fetchTracks, fetchAlbums } = useMusicStore();
+  const { token } = useAuthStore();
+
+  useEffect(() => {
+    if (token) {
+      fetchTracks();
+      fetchAlbums();
+    }
+  }, [token]);
+
   return (
     <>
       <Tabs

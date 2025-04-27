@@ -1,16 +1,40 @@
-import { FlatList, Image, Text, View, StyleSheet } from "react-native";
+import { useState } from "react";
+import {
+  FlatList,
+  Image,
+  Text,
+  View,
+  StyleSheet,
+  RefreshControl,
+} from "react-native";
 import { TrackListItem } from "./TrackListItem";
 import { Track } from "@/utils/types";
 
 type TrackListProps = {
   tracks: Track[];
+  onRefresh?: () => Promise<void>;
 };
 
-export const TrackList = ({ tracks }: TrackListProps) => {
+export const TrackList = ({ tracks, onRefresh }: TrackListProps) => {
+  const [refreshing, setRefreshing] = useState(false);
+
+  const handleRefresh = async () => {
+    if (!onRefresh) return;
+    setRefreshing(true);
+    await onRefresh();
+    setRefreshing(false);
+  };
+
   return (
     <FlatList
       data={tracks}
       contentContainerStyle={styles.listContainer}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={handleRefresh}
+        />
+      }
       ListEmptyComponent={
         <View style={styles.emptyContainer}>
           <Image
@@ -23,6 +47,7 @@ export const TrackList = ({ tracks }: TrackListProps) => {
       }
       renderItem={({ item: track }) => <TrackListItem track={track} />}
       showsVerticalScrollIndicator={false}
+      keyExtractor={(item) => item.TrackId.toString()}
     />
   );
 };

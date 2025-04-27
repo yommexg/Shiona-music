@@ -12,7 +12,6 @@ import { TrackList } from "@/components/TrackList";
 
 export default function SongScreen() {
   const { isLoading, fetchTracks, tracks } = useMusicStore();
-  const { token } = useAuthStore();
 
   const handleBackPress = () => {
     Alert.alert("Exit Shiona Music App", "Are you sure you want to quit?", [
@@ -36,16 +35,15 @@ export default function SongScreen() {
     }, [])
   );
 
-  useEffect(() => {
-    token && fetchTracks();
-  }, [token]);
-
   return (
     <SafeAreaView style={styles.container}>
       {isLoading && <Spinner />}
       <Header />
       <View style={styles.trackListWrapper}>
-        <TrackList tracks={tracks} />
+        <TrackList
+          tracks={tracks}
+          onRefresh={async () => await fetchTracks()}
+        />
       </View>
     </SafeAreaView>
   );

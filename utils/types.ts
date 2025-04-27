@@ -6,11 +6,17 @@ export interface Genre {
   Tracks: (Track | null)[];
 }
 
+export interface Artist {
+  ArtistId: number;
+  Name: string;
+}
+
 export interface Album {
   AlbumId: number;
   Title: string;
   ArtistId: number;
   ReleaseYear: number;
+  Artist: Artist;
   Tracks: (Track | null)[];
 }
 

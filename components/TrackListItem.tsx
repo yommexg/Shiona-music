@@ -2,6 +2,7 @@ import { Track } from "@/utils/types";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 
 import { useAudioStore } from "@/store/useAudioStore";
+import { Ionicons } from "@expo/vector-icons";
 
 export type TrackListItemProps = {
   track: Track;
@@ -33,11 +34,11 @@ export const TrackListItem = ({ track }: TrackListItemProps) => {
 
       <View style={styles.rightSection}>
         <Text style={styles.duration}>{formatDuration(track.Duration)}</Text>
-        {/* <Ionicons
+        <Ionicons
           name="ellipsis-vertical"
           size={18}
           color="#fff"
-        /> */}
+        />
       </View>
     </TouchableOpacity>
   );
