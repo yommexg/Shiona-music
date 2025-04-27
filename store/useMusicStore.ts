@@ -1,18 +1,26 @@
 import { create } from "zustand";
 import { Alert } from "react-native";
 import { BASE_URL } from "./baseApi";
-import { Track } from "@/utils/types";
+import { Album, Artist, Genre, Track } from "@/utils/types";
 
 interface MusicState {
   tracks: Track[];
-  albums: any[];
-  genres: any[];
-  artists: any[];
+  albums: Album[];
+  genres: Genre[];
+  artists: Artist[];
   isLoading: boolean;
-  fetchTracks: () => Promise<void>;
-  fetchAlbums: () => Promise<void>;
-  fetchGenres: () => Promise<void>;
-  fetchArtists: () => Promise<void>;
+  currentPageTracks: number;
+  currentPageAlbums: number;
+  currentPageGenres: number;
+  currentPageArtists: number;
+  totalTracks: number;
+  totalAlbums: number;
+  totalGenres: number;
+  totalArtists: number;
+  fetchTracks: (page?: number, limit?: number) => Promise<void>;
+  fetchAlbums: (page?: number, limit?: number) => Promise<void>;
+  fetchGenres: (page?: number, limit?: number) => Promise<void>;
+  fetchArtists: (page?: number, limit?: number) => Promise<void>;
   addTrack: (track: any) => Promise<void>;
   addAlbum: (album: any) => Promise<void>;
   addGenre: (genre: any) => Promise<void>;
@@ -29,15 +37,28 @@ export const useMusicStore = create<MusicState>((set) => ({
   genres: [],
   artists: [],
   isLoading: false,
+  currentPageTracks: 1,
+  currentPageAlbums: 1,
+  currentPageGenres: 1,
+  currentPageArtists: 1,
+  totalTracks: 0,
+  totalAlbums: 0,
+  totalGenres: 0,
+  totalArtists: 0,
 
-  // Fetch data for tracks
-  fetchTracks: async () => {
+  fetchTracks: async (page = 1, limit = 10) => {
     set({ isLoading: true });
     try {
-      const response = await fetch(`${BASE_URL}/api/tracks`);
+      const response = await fetch(
+        `${BASE_URL}/api/tracks?page=${page}&pageSize=${limit}`
+      );
       const data = await response.json();
       if (response.ok) {
-        set({ tracks: data });
+        set((state) => ({
+          tracks: page === 1 ? data : [...state.tracks, ...data],
+          currentPageTracks: page,
+          totalTracks: 16,
+        }));
       } else {
         Alert.alert("Error", "Failed to load tracks.");
       }
@@ -48,14 +69,20 @@ export const useMusicStore = create<MusicState>((set) => ({
     }
   },
 
-  // Fetch data for albums
-  fetchAlbums: async () => {
+  fetchAlbums: async (page = 1, limit = 10) => {
     set({ isLoading: true });
     try {
-      const response = await fetch(`${BASE_URL}/api/albums`);
+      const response = await fetch(
+        `${BASE_URL}/api/Albums?page=${page}&pageSize=${limit}`
+      );
       const data = await response.json();
+
       if (response.ok) {
-        set({ albums: data });
+        set((state) => ({
+          albums: page === 1 ? data : [...state.albums, ...data],
+          currentPageAlbums: page,
+          totalAlbums: 16,
+        }));
       } else {
         Alert.alert("Error", "Failed to load albums.");
       }
@@ -66,14 +93,19 @@ export const useMusicStore = create<MusicState>((set) => ({
     }
   },
 
-  // Fetch data for genres
-  fetchGenres: async () => {
+  fetchGenres: async (page = 1, limit = 10) => {
     set({ isLoading: true });
     try {
-      const response = await fetch(`${BASE_URL}/api/genres`);
+      const response = await fetch(
+        `${BASE_URL}/api/genres?page=${page}&limit=${limit}`
+      );
       const data = await response.json();
       if (response.ok) {
-        set({ genres: data });
+        set((state) => ({
+          genres: page === 1 ? data.genres : [...state.genres, ...data.genres],
+          currentPageGenres: page,
+          totalGenres: data.total,
+        }));
       } else {
         Alert.alert("Error", "Failed to load genres.");
       }
@@ -84,14 +116,20 @@ export const useMusicStore = create<MusicState>((set) => ({
     }
   },
 
-  // Fetch data for artists
-  fetchArtists: async () => {
+  fetchArtists: async (page = 1, limit = 10) => {
     set({ isLoading: true });
     try {
-      const response = await fetch(`${BASE_URL}/api/artists`);
+      const response = await fetch(
+        `${BASE_URL}/api/artists?page=${page}&limit=${limit}`
+      );
       const data = await response.json();
       if (response.ok) {
-        set({ artists: data });
+        set((state) => ({
+          artists:
+            page === 1 ? data.artists : [...state.artists, ...data.artists],
+          currentPageArtists: page,
+          totalArtists: data.total,
+        }));
       } else {
         Alert.alert("Error", "Failed to load artists.");
       }
@@ -219,9 +257,9 @@ export const useMusicStore = create<MusicState>((set) => ({
         method: "DELETE",
       });
       if (response.ok) {
-        set((state) => ({
-          albums: state.albums.filter((album) => album.id !== albumId),
-        }));
+        // set((state) => ({
+        //   albums: state.albums.filter((album) => album.A !== albumId),
+        // }));
       } else {
         Alert.alert("Error", "Failed to delete album.");
       }
@@ -240,9 +278,9 @@ export const useMusicStore = create<MusicState>((set) => ({
         method: "DELETE",
       });
       if (response.ok) {
-        set((state) => ({
-          genres: state.genres.filter((genre) => genre.id !== genreId),
-        }));
+        // set((state) => ({
+        //   genres: state.genres.filter((genre) => genre.id !== genreId),
+        // }));
       } else {
         Alert.alert("Error", "Failed to delete genre.");
       }
@@ -261,9 +299,9 @@ export const useMusicStore = create<MusicState>((set) => ({
         method: "DELETE",
       });
       if (response.ok) {
-        set((state) => ({
-          artists: state.artists.filter((artist) => artist.id !== artistId),
-        }));
+        // set((state) => ({
+        //   artists: state.artists.filter((artist) => artist.id !== artistId),
+        // }));
       } else {
         Alert.alert("Error", "Failed to delete artist.");
       }

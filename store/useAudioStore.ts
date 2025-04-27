@@ -9,6 +9,7 @@ interface AudioState {
   playTrack: (track: Track) => Promise<void>;
   togglePlay: () => Promise<void>;
   pauseTrack: () => Promise<void>;
+  stopMusic: () => Promise<void>;
   sound: Audio.Sound | null;
 }
 
@@ -59,6 +60,14 @@ export const useAudioStore = create<AudioState>((set, get) => ({
     if (sound && isPlaying) {
       await sound.pauseAsync();
       set({ isPlaying: false });
+    }
+  },
+
+  stopMusic: async () => {
+    const { sound, isPlaying } = get();
+    if (sound && isPlaying) {
+      await sound.pauseAsync();
+      set({ isPlaying: false, currentTrack: null });
     }
   },
 }));

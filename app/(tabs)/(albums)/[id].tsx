@@ -1,14 +1,12 @@
-import { useAuthStore } from "@/store/useAuthStore";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Text, StyleSheet, View } from "react-native";
+import { useLocalSearchParams } from "expo-router";
+
 import { useMusicStore } from "@/store/useMusicStore";
 
-import { SafeAreaView } from "react-native-safe-area-context";
-import { BackHandler, Text, StyleSheet, View } from "react-native";
-import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
-import { useCallback } from "react";
 import Header from "@/components/Header";
 import Spinner from "@/components/Spinner";
 import { TrackList } from "@/components/TrackList";
-import { Album, Track } from "@/utils/types";
 
 export default function IndividualAlbumScreen() {
   const { id } = useLocalSearchParams();
@@ -16,31 +14,18 @@ export default function IndividualAlbumScreen() {
 
   const albumId = Number(id);
 
-  const album = albums.find((album) => album.AlbumId === albumId) as Album;
+  const album = albums.find((album) => album.AlbumId === albumId);
 
   const tracksInAlbum = tracks.filter((track) => track.AlbumId === albumId);
-
-  const handleBackPress = () => {
-    router.push("/(tabs)/(albums)");
-    return true;
-  };
-
-  useFocusEffect(
-    useCallback(() => {
-      BackHandler.addEventListener("hardwareBackPress", handleBackPress);
-
-      return () => {
-        BackHandler.removeEventListener("hardwareBackPress", handleBackPress);
-      };
-    }, [])
-  );
 
   return (
     <SafeAreaView style={styles.container}>
       {isLoading && <Spinner />}
       <Header />
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>{album.Title}</Text>
+        <Text style={styles.headerTitle}>
+          {album ? album.Title : `Unknown Album`}
+        </Text>
       </View>
 
       <View style={styles.trackListWrapper}>

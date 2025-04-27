@@ -11,7 +11,8 @@ import Spinner from "@/components/Spinner";
 import { TrackList } from "@/components/TrackList";
 
 export default function SongScreen() {
-  const { isLoading, fetchTracks, tracks } = useMusicStore();
+  const { isLoading, fetchTracks, tracks, currentPageTracks, totalTracks } =
+    useMusicStore();
 
   const handleBackPress = () => {
     Alert.alert("Exit Shiona Music App", "Are you sure you want to quit?", [
@@ -35,6 +36,12 @@ export default function SongScreen() {
     }, [])
   );
 
+  const loadMoreTracks = async () => {
+    if (!isLoading && tracks.length < totalTracks) {
+      await fetchTracks(currentPageTracks + 1, 10);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       {isLoading && <Spinner />}
@@ -43,6 +50,7 @@ export default function SongScreen() {
         <TrackList
           tracks={tracks}
           onRefresh={async () => await fetchTracks()}
+          loadMoreTracks={loadMoreTracks}
         />
       </View>
     </SafeAreaView>

@@ -9,13 +9,19 @@ import {
 } from "react-native";
 import { TrackListItem } from "./TrackListItem";
 import { Track } from "@/utils/types";
+import { useMusicStore } from "@/store/useMusicStore";
 
 type TrackListProps = {
   tracks: Track[];
   onRefresh?: () => Promise<void>;
+  loadMoreTracks?: () => Promise<void>;
 };
 
-export const TrackList = ({ tracks, onRefresh }: TrackListProps) => {
+export const TrackList = ({
+  tracks,
+  onRefresh,
+  loadMoreTracks,
+}: TrackListProps) => {
   const [refreshing, setRefreshing] = useState(false);
 
   const handleRefresh = async () => {
@@ -35,6 +41,8 @@ export const TrackList = ({ tracks, onRefresh }: TrackListProps) => {
           onRefresh={handleRefresh}
         />
       }
+      onEndReached={loadMoreTracks}
+      onEndReachedThreshold={0.5}
       ListEmptyComponent={
         <View style={styles.emptyContainer}>
           <Image

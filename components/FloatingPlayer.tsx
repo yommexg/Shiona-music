@@ -10,7 +10,8 @@ const formatTime = (seconds: number) => {
 };
 
 const FloatingPlayer = () => {
-  const { currentTrack, isPlaying, togglePlay, position } = useAudioStore();
+  const { currentTrack, isPlaying, togglePlay, position, stopMusic } =
+    useAudioStore();
 
   if (!currentTrack) return null;
 
@@ -40,13 +41,22 @@ const FloatingPlayer = () => {
         </View>
       </View>
 
-      <TouchableOpacity onPress={togglePlay}>
-        <Ionicons
-          name={isPlaying ? "pause" : "play"}
-          size={28}
-          color="white"
-        />
-      </TouchableOpacity>
+      <View style={{ flexDirection: "row", gap: 10 }}>
+        <TouchableOpacity onPress={togglePlay}>
+          <Ionicons
+            name={isPlaying ? "pause" : "play"}
+            size={28}
+            color="white"
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={stopMusic}>
+          <Ionicons
+            name="stop"
+            size={28}
+            color="white"
+          />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };

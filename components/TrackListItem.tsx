@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 
 import { useAudioStore } from "@/store/useAudioStore";
 import { Ionicons } from "@expo/vector-icons";
+import { useMusicStore } from "@/store/useMusicStore";
 
 export type TrackListItemProps = {
   track: Track;
@@ -16,6 +17,9 @@ const formatDuration = (duration: number) => {
 
 export const TrackListItem = ({ track }: TrackListItemProps) => {
   const playTrack = useAudioStore((state) => state.playTrack);
+  const { albums } = useMusicStore();
+
+  const album = albums.find((album) => album.AlbumId === track.AlbumId);
 
   return (
     <TouchableOpacity
@@ -29,7 +33,9 @@ export const TrackListItem = ({ track }: TrackListItemProps) => {
 
       <View style={styles.textContainer}>
         <Text style={styles.songTitle}>{track.Title}</Text>
-        <Text style={styles.albumTitle}>{track.Album.Title}</Text>
+        <Text style={styles.albumTitle}>
+          {album?.Artist.Name ?? "Unknown Artist"}
+        </Text>
       </View>
 
       <View style={styles.rightSection}>

@@ -3,7 +3,7 @@ import Spinner from "@/components/Spinner";
 import { useMusicStore } from "@/store/useMusicStore";
 import { Album } from "@/utils/types";
 import { router, useFocusEffect } from "expo-router";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import {
   Alert,
   BackHandler,
@@ -36,25 +36,27 @@ const AlbumCard = ({ album }: { album: Album }) => {
 };
 
 export default function AlbumScreen() {
-  const { isLoading, fetchAlbums, albums } = useMusicStore();
+  const { isLoading, fetchAlbums, albums, currentPageAlbums, totalAlbums } =
+    useMusicStore();
   const [refreshing, setRefreshing] = useState(false);
 
-  const onRefresh = async () => await fetchAlbums();
+  const onRefresh = async () => await fetchAlbums(1, 10);
 
   const handleRefresh = async () => {
-    if (!onRefresh) return;
     setRefreshing(true);
     await onRefresh();
     setRefreshing(false);
   };
 
+  const loadMoreAlbums = async () => {
+    if (!isLoading && albums.length < totalAlbums) {
+      await fetchAlbums(currentPageAlbums + 1, 10);
+    }
+  };
+
   const handleBackPress = () => {
     Alert.alert("Exit Shiona Music App", "Are you sure you want to quit?", [
-      {
-        text: "Cancel",
-        onPress: () => null,
-        style: "cancel",
-      },
+      { text: "Cancel", onPress: () => null, style: "cancel" },
       { text: "YES", onPress: () => BackHandler.exitApp() },
     ]);
     return true;
@@ -63,7 +65,6 @@ export default function AlbumScreen() {
   useFocusEffect(
     useCallback(() => {
       BackHandler.addEventListener("hardwareBackPress", handleBackPress);
-
       return () => {
         BackHandler.removeEventListener("hardwareBackPress", handleBackPress);
       };
@@ -89,6 +90,8 @@ export default function AlbumScreen() {
             />
           }
           showsVerticalScrollIndicator={false}
+          onEndReached={loadMoreAlbums}
+          onEndReachedThreshold={0.5}
           ListEmptyComponent={
             <View style={styles.emptyContainer}>
               <Image
@@ -96,7 +99,7 @@ export default function AlbumScreen() {
                 style={styles.emptyImage}
                 resizeMode="contain"
               />
-              <Text style={styles.emptyText}>No Album Availiable 📂</Text>
+              <Text style={styles.emptyText}>No Album Available 📂</Text>
             </View>
           }
         />
@@ -118,12 +121,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 50,
   },
-
   listContainer: {
     paddingTop: 10,
     paddingBottom: 128,
   },
-
   emptyContainer: {
     justifyContent: "center",
     alignItems: "center",
@@ -138,7 +139,6 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 18,
   },
-
   albumCard: {
     backgroundColor: "#3a2e2e",
     padding: 16,
@@ -157,8 +157,5 @@ const styles = StyleSheet.create({
   releaseYear: {
     color: "#fff",
     fontSize: 12,
-  },
-  flatListContainer: {
-    paddingBottom: 20,
   },
 });
