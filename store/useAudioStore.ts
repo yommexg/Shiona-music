@@ -64,9 +64,9 @@ export const useAudioStore = create<AudioState>((set, get) => ({
   },
 
   stopMusic: async () => {
-    const { sound, isPlaying } = get();
-    if (sound && isPlaying) {
-      await sound.pauseAsync();
+    const { sound } = get();
+    if (sound) {
+      await sound.stopAsync();
       set({ isPlaying: false, currentTrack: null });
     }
   },

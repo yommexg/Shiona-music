@@ -1,9 +1,8 @@
 import { useFocusEffect } from "expo-router";
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { Alert, BackHandler, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { useAuthStore } from "@/store/useAuthStore";
 import { useMusicStore } from "@/store/useMusicStore";
 
 import Header from "@/components/Header";

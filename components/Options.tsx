@@ -79,3 +79,68 @@ export const MusicOptions = ({ children }: MusicOptionsProps) => {
     </Menu>
   );
 };
+
+type TrackOptionsProps = PropsWithChildren<{
+  trackId: number;
+}>;
+
+export const TrackOptions = ({ children, trackId }: TrackOptionsProps) => {
+  const handlePressAction = async (id: string) => {
+    switch (id) {
+      case "edit":
+        console.log("Edit Track " + trackId);
+        break;
+
+      case "delete":
+        console.log("Delete Track " + trackId);
+
+        break;
+
+      default:
+        console.warn(`Unknown menu action ${id}`);
+        break;
+    }
+  };
+
+  return (
+    <Menu>
+      <MenuTrigger
+        customStyles={{
+          triggerWrapper: {
+            padding: 2,
+          },
+        }}>
+        {children}
+      </MenuTrigger>
+      <MenuOptions
+        customStyles={{
+          optionsContainer: {
+            padding: 10,
+            borderRadius: 8,
+            backgroundColor: "#1E1E1E",
+          },
+        }}>
+        <View style={{ gap: 10 }}>
+          <MenuOption onSelect={() => handlePressAction("edit")}>
+            <Text
+              style={{
+                fontSize: 14,
+                color: "white",
+              }}>
+              Edit
+            </Text>
+          </MenuOption>
+          <MenuOption onSelect={() => handlePressAction("delete")}>
+            <Text
+              style={{
+                fontSize: 14,
+                color: "white",
+              }}>
+              Delete
+            </Text>
+          </MenuOption>
+        </View>
+      </MenuOptions>
+    </Menu>
+  );
+};

@@ -4,15 +4,12 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import { useAudioStore } from "@/store/useAudioStore";
 import { Ionicons } from "@expo/vector-icons";
 import { useMusicStore } from "@/store/useMusicStore";
+import { formatDuration } from "@/utils/format";
+import { StopPropagation } from "@/utils/stopPropagation";
+import { TrackOptions } from "./Options";
 
 export type TrackListItemProps = {
   track: Track;
-};
-
-const formatDuration = (duration: number) => {
-  const minutes = Math.floor(duration / 60);
-  const seconds = duration % 60;
-  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 };
 
 export const TrackListItem = ({ track }: TrackListItemProps) => {
@@ -40,11 +37,15 @@ export const TrackListItem = ({ track }: TrackListItemProps) => {
 
       <View style={styles.rightSection}>
         <Text style={styles.duration}>{formatDuration(track.Duration)}</Text>
-        <Ionicons
-          name="ellipsis-vertical"
-          size={18}
-          color="#fff"
-        />
+        <StopPropagation>
+          <TrackOptions trackId={track.TrackId}>
+            <Ionicons
+              name="ellipsis-vertical"
+              size={18}
+              color="#fff"
+            />
+          </TrackOptions>
+        </StopPropagation>
       </View>
     </TouchableOpacity>
   );

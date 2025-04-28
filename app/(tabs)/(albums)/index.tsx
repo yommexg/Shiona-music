@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import Spinner from "@/components/Spinner";
 import { useMusicStore } from "@/store/useMusicStore";
 import { Album } from "@/utils/types";
+import { Ionicons } from "@expo/vector-icons";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import {
@@ -28,9 +29,16 @@ const AlbumCard = ({ album }: { album: Album }) => {
           params: { id: album.AlbumId },
         })
       }>
-      <Text style={styles.albumTitle}>{album.Title}</Text>
-      <Text style={styles.artistName}>{album.Artist.Name}</Text>
-      <Text style={styles.releaseYear}>{album.ReleaseYear}</Text>
+      <Ionicons
+        name="albums"
+        size={35}
+        color="white"
+      />
+      <View>
+        <Text style={styles.albumTitle}>{album.Title}</Text>
+        <Text style={styles.artistName}>{album.Artist.Name}</Text>
+        <Text style={styles.releaseYear}>{album.ReleaseYear}</Text>
+      </View>
     </TouchableOpacity>
   );
 };
@@ -94,10 +102,10 @@ export default function AlbumScreen() {
           onEndReachedThreshold={0.5}
           ListEmptyComponent={
             <View style={styles.emptyContainer}>
-              <Image
-                source={require("@/assets/images/unknown_track.png")}
-                style={styles.emptyImage}
-                resizeMode="contain"
+              <Ionicons
+                name="albums"
+                size={60}
+                color="white"
               />
               <Text style={styles.emptyText}>No Album Available 📂</Text>
             </View>
@@ -144,6 +152,9 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 8,
     marginBottom: 16,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 20,
   },
   albumTitle: {
     color: "#fff",

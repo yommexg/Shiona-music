@@ -2,20 +2,19 @@ import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useAudioStore } from "@/store/useAudioStore";
-
-const formatTime = (seconds: number) => {
-  const mins = Math.floor(seconds / 60);
-  const secs = Math.floor(seconds % 60);
-  return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
-};
+import { formatTime } from "@/utils/format";
+import { useMusicStore } from "@/store/useMusicStore";
 
 const FloatingPlayer = () => {
   const { currentTrack, isPlaying, togglePlay, position, stopMusic } =
     useAudioStore();
+  const { albums } = useMusicStore();
 
   if (!currentTrack) return null;
 
   const progress = (position / currentTrack.Duration) * 100 || 0;
+
+  const album = albums.find((album) => album.AlbumId === currentTrack.AlbumId);
 
   return (
     <View style={styles.container}>
@@ -29,7 +28,7 @@ const FloatingPlayer = () => {
         <Text
           style={styles.artist}
           numberOfLines={1}>
-          Shiona Martins
+          {album?.Artist.Name ?? "Unknown Artist"}
         </Text>
 
         <Text style={styles.time}>

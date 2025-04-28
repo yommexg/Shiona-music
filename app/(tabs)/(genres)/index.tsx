@@ -1,17 +1,60 @@
 import Header from "@/components/Header";
+import { useMusicStore } from "@/store/useMusicStore";
+import { Genre } from "@/utils/types";
+import { FontAwesome } from "@expo/vector-icons";
 import { useFocusEffect } from "expo-router";
-import { useCallback } from "react";
-import { Alert, BackHandler, Text, View, Image } from "react-native";
+import { useCallback, useState } from "react";
+import {
+  Alert,
+  BackHandler,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  View,
+  Image,
+  StyleSheet,
+  RefreshControl,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+// Genre Card Component
+const GenreCard = ({ genre }: { genre: Genre }) => {
+  return (
+    <TouchableOpacity
+      style={styles.genreCard}
+      onPress={() => {}}>
+      <FontAwesome
+        name="book"
+        size={32}
+        color="white"
+      />
+      <Text style={styles.genreName}>{genre.Name}</Text>
+    </TouchableOpacity>
+  );
+};
+
 export default function GenreScreen() {
+  const { isLoading, fetchGenres, genres, currentPageGenres, totalGenres } =
+    useMusicStore();
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = async () => await fetchGenres(1, 10);
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await onRefresh();
+    setRefreshing(false);
+  };
+
+  const loadMoreGenres = async () => {
+    if (!isLoading && genres.length < totalGenres) {
+      await fetchGenres(currentPageGenres + 1, 10);
+    }
+  };
+
   const handleBackPress = () => {
     Alert.alert("Exit Shiona Music App", "Are you sure you want to quit?", [
-      {
-        text: "Cancel",
-        onPress: () => null,
-        style: "cancel",
-      },
+      { text: "Cancel", onPress: () => null, style: "cancel" },
       { text: "YES", onPress: () => BackHandler.exitApp() },
     ]);
     return true;
@@ -20,19 +63,102 @@ export default function GenreScreen() {
   useFocusEffect(
     useCallback(() => {
       BackHandler.addEventListener("hardwareBackPress", handleBackPress);
-
       return () => {
         BackHandler.removeEventListener("hardwareBackPress", handleBackPress);
       };
     }, [])
   );
 
+  const renderGenre = ({ item }: { item: Genre }) => <GenreCard genre={item} />;
+
   return (
-    <SafeAreaView className="flex-1 bg-[#2c2222]">
+    <SafeAreaView style={styles.container}>
       <Header />
-      <View className="flex-1 justify-center items-center">
-        <Text className="text-white text-lg">Your genres go here 🎵</Text>
-      </View>
+      <FlatList
+        data={genres}
+        keyExtractor={(item) => item.GenreId.toString()}
+        renderItem={renderGenre}
+        numColumns={2}
+        contentContainerStyle={styles.listContainer}
+        columnWrapperStyle={styles.row}
+        showsVerticalScrollIndicator={false}
+        onEndReached={loadMoreGenres}
+        onEndReachedThreshold={0.5}
+        ListEmptyComponent={
+          <View style={styles.emptyContainer}>
+            <FontAwesome
+              name="book"
+              size={50}
+              color="white"
+            />
+            <Text style={styles.emptyText}>No Genre Available 📖</Text>
+          </View>
+        }
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={handleRefresh}
+          />
+        }
+      />
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#2c2222",
+  },
+  listContainer: {
+    paddingHorizontal: 16,
+    paddingTop: 10,
+    paddingBottom: 100,
+  },
+  row: {
+    justifyContent: "space-between",
+    marginBottom: 20,
+  },
+  genreCard: {
+    backgroundColor: "#3a2e2e",
+    flex: 1,
+    borderRadius: 12,
+    padding: 16,
+    justifyContent: "center",
+    gap: 10,
+    alignItems: "center",
+    marginHorizontal: 5,
+    height: 140,
+    elevation: 3,
+    shadowColor: "#000",
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+  },
+  genreImage: {
+    width: 45,
+    height: 45,
+    marginBottom: 10,
+    tintColor: "white",
+  },
+  genreName: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "600",
+    textAlign: "center",
+  },
+  emptyContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: 40,
+    gap: 20,
+  },
+  emptyImage: {
+    width: 80,
+    height: 80,
+  },
+  emptyText: {
+    color: "white",
+    fontSize: 18,
+  },
+});

@@ -97,14 +97,14 @@ export const useMusicStore = create<MusicState>((set) => ({
     set({ isLoading: true });
     try {
       const response = await fetch(
-        `${BASE_URL}/api/genres?page=${page}&limit=${limit}`
+        `${BASE_URL}/api/genres?page=${page}&pageSize=${limit}`
       );
       const data = await response.json();
       if (response.ok) {
         set((state) => ({
-          genres: page === 1 ? data.genres : [...state.genres, ...data.genres],
+          genres: page === 1 ? data : [...state.genres, ...data],
           currentPageGenres: page,
-          totalGenres: data.total,
+          totalGenres: 10,
         }));
       } else {
         Alert.alert("Error", "Failed to load genres.");
@@ -120,15 +120,14 @@ export const useMusicStore = create<MusicState>((set) => ({
     set({ isLoading: true });
     try {
       const response = await fetch(
-        `${BASE_URL}/api/artists?page=${page}&limit=${limit}`
+        `${BASE_URL}/api/artists?page=${page}&pageSize=${limit}`
       );
       const data = await response.json();
       if (response.ok) {
         set((state) => ({
-          artists:
-            page === 1 ? data.artists : [...state.artists, ...data.artists],
+          artists: page === 1 ? data : [...state.artists, ...data],
           currentPageArtists: page,
-          totalArtists: data.total,
+          totalArtists: 19,
         }));
       } else {
         Alert.alert("Error", "Failed to load artists.");

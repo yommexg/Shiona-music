@@ -6,13 +6,16 @@ import { useMusicStore } from "@/store/useMusicStore";
 import { useEffect } from "react";
 
 export default function TabLayout() {
-  const { fetchTracks, fetchAlbums } = useMusicStore();
+  const { fetchTracks, fetchAlbums, fetchArtists, fetchGenres } =
+    useMusicStore();
   const { token } = useAuthStore();
 
   useEffect(() => {
     if (token) {
       fetchTracks();
       fetchAlbums();
+      fetchArtists();
+      fetchGenres();
     }
   }, [token]);
 
