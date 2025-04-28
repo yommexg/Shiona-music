@@ -22,6 +22,7 @@ export default function TabLayout() {
   return (
     <>
       <Tabs
+        initialRouteName="(songs)"
         screenOptions={{
           tabBarActiveTintColor: "red",
           tabBarLabelStyle: {
@@ -69,10 +70,10 @@ export default function TabLayout() {
           name="(songs)"
           options={{
             title: "Songs",
-            tabBarIcon: ({ color }) => (
+            tabBarIcon: ({ color, size }) => (
               <Ionicons
                 name="musical-notes-sharp"
-                size={24}
+                size={size}
                 color={color}
               />
             ),
@@ -83,10 +84,10 @@ export default function TabLayout() {
           name="(artists)"
           options={{
             title: "Artists",
-            tabBarIcon: ({ color }) => (
+            tabBarIcon: ({ color, size }) => (
               <FontAwesome6
                 name="users-line"
-                size={20}
+                size={size}
                 color={color}
               />
             ),

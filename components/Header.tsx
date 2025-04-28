@@ -1,8 +1,10 @@
 import { Ionicons } from "@expo/vector-icons";
-import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet } from "react-native";
 import { MusicOptions } from "./Options";
+import { useAuthStore } from "@/store/useAuthStore";
 
 const Header = () => {
+  const { user } = useAuthStore();
   return (
     <View style={styles.container}>
       <View style={styles.leftSection}>
@@ -11,16 +13,36 @@ const Header = () => {
           style={styles.logo}
           resizeMode="contain"
         />
-        <Text style={styles.title}>Shiona Music</Text>
+        <View>
+          <Text style={styles.title}>Shiona Music</Text>
+          <Text
+            style={styles.user}
+            numberOfLines={1}
+            ellipsizeMode="tail">
+            Welcome, {user}
+          </Text>
+        </View>
       </View>
-      <MusicOptions>
-        <Ionicons
-          name="options"
-          size={30}
-          color="red"
-          style={styles.icon}
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          gap: 20,
+        }}>
+        <Image
+          source={require("@/assets/images/unknown_artist.png")}
+          style={styles.userImg}
+          resizeMode="contain"
         />
-      </MusicOptions>
+        <MusicOptions>
+          <Ionicons
+            name="options"
+            size={30}
+            color="red"
+            style={styles.icon}
+          />
+        </MusicOptions>
+      </View>
     </View>
   );
 };
@@ -29,7 +51,7 @@ export default Header;
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 20,
     paddingVertical: 12,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
@@ -50,7 +72,7 @@ const styles = StyleSheet.create({
   logo: {
     width: 80,
     height: 80,
-    marginRight: 12,
+    marginRight: 8,
   },
   title: {
     color: "white",
@@ -60,5 +82,20 @@ const styles = StyleSheet.create({
   },
   icon: {
     paddingRight: 10,
+  },
+
+  user: {
+    fontStyle: "italic",
+    color: "#aaa",
+    fontSize: 12,
+    marginTop: 4,
+    width: 100,
+    textTransform: "capitalize",
+  },
+
+  userImg: {
+    width: 30,
+    height: 30,
+    borderRadius: 24,
   },
 });

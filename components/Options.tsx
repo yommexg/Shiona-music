@@ -9,6 +9,8 @@ import {
 
 import { useAuthStore } from "@/store/useAuthStore";
 import { useAudioStore } from "@/store/useAudioStore";
+import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
+import { router } from "expo-router";
 
 type MusicOptionsProps = PropsWithChildren<{}>;
 
@@ -18,12 +20,33 @@ export const MusicOptions = ({ children }: MusicOptionsProps) => {
 
   const handlePressAction = async (id: string) => {
     switch (id) {
-      // // For Students
-      // case "":
-      //   // router.push(
-      //   //   `/(student)/(courses)/studentCourse/(studentDetails)/${courseId}&&&Enrolled Courses`
-      //   // );
-      //   break;
+      case "add-genre":
+        router.push("/(tabs)/(genres)");
+        setTimeout(() => {
+          router.push("/(tabs)/(genres)/(add-genre)");
+        }, 100);
+        break;
+
+      case "add-album":
+        router.push("/(tabs)/(albums)");
+        setTimeout(() => {
+          router.push("/(tabs)/(albums)/(add-album)");
+        }, 100);
+        break;
+
+      case "add-song":
+        router.push("/(tabs)/(songs)");
+        setTimeout(() => {
+          router.push("/(tabs)/(songs)/(add-song)");
+        }, 100);
+        break;
+
+      case "add-artist":
+        router.push("/(tabs)/(artists)");
+        setTimeout(() => {
+          router.push("/(tabs)/(artists)/(add-artist)");
+        }, 100);
+        break;
 
       case "logout":
         pauseTrack();
@@ -49,18 +72,58 @@ export const MusicOptions = ({ children }: MusicOptionsProps) => {
       <MenuOptions
         customStyles={{
           optionsContainer: {
-            padding: 10,
+            paddingHorizontal: 10,
+            paddingVertical: 24,
             borderRadius: 8,
             backgroundColor: "#1E1E1E",
           },
         }}>
         <View style={{ gap: 20 }}>
-          {/* <MenuOption onSelect={() => handlePressAction("home")}>
-            <Text className="text-white">1</Text>
+          <MenuOption onSelect={() => handlePressAction("add-genre")}>
+            <View
+              style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+              <MaterialCommunityIcons
+                name="book-plus-outline"
+                size={21}
+                color="white"
+              />
+              <Text style={{ fontSize: 18, color: "white" }}>Add Genre</Text>
+            </View>
           </MenuOption>
-          <MenuOption onSelect={() => handlePressAction("annoucement")}>
-            <Text>2</Text>
-          </MenuOption> */}
+          <MenuOption onSelect={() => handlePressAction("add-album")}>
+            <View
+              style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+              <AntDesign
+                name="addfolder"
+                size={21}
+                color="white"
+              />
+              <Text style={{ fontSize: 18, color: "white" }}>Add Album</Text>
+            </View>
+          </MenuOption>
+          <MenuOption onSelect={() => handlePressAction("add-song")}>
+            <View
+              style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+              <MaterialCommunityIcons
+                name="music-note-plus"
+                size={21}
+                color="white"
+              />
+              <Text style={{ fontSize: 18, color: "white" }}>Add Song</Text>
+            </View>
+          </MenuOption>
+          <MenuOption onSelect={() => handlePressAction("add-artist")}>
+            <View
+              style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+              <AntDesign
+                name="adduser"
+                size={21}
+                color="white"
+              />
+              <Text style={{ fontSize: 18, color: "white" }}>Add Artist</Text>
+            </View>
+          </MenuOption>
+
           <MenuOption onSelect={() => handlePressAction("logout")}>
             <Text
               style={{
@@ -70,6 +133,7 @@ export const MusicOptions = ({ children }: MusicOptionsProps) => {
                 backgroundColor: "red",
                 paddingVertical: 5,
                 borderRadius: 4,
+                marginTop: 20,
               }}>
               Logout
             </Text>

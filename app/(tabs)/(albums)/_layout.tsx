@@ -15,6 +15,20 @@ export default function AlbumLayout() {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name="(add-album)"
+        options={{
+          title: "Add Album",
+          headerStyle: {
+            backgroundColor: "#1E1E1E",
+          },
+          headerTintColor: "white",
+          headerTitleStyle: {
+            fontWeight: "bold",
+            fontSize: 18,
+          },
+        }}
+      />
     </Stack>
   );
 }

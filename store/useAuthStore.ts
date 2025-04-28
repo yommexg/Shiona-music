@@ -40,6 +40,8 @@ export const useAuthStore = create<AuthState>((set) => ({
       const data = await response.json();
       if (response.ok) {
         await AsyncStorage.setItem("token", data.token);
+        await AsyncStorage.setItem("user", user);
+
         set({ user, token: data.token });
         router.replace("/(tabs)/(songs)");
       } else {
@@ -91,8 +93,9 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   loadToken: async () => {
     const token = await AsyncStorage.getItem("token");
+    const user = await AsyncStorage.getItem("user");
     if (token) {
-      set({ token });
+      set({ token, user: user ?? "User" });
       router.replace("/(tabs)/(songs)");
     } else {
       router.replace("/(auth)/login");
