@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { Alert } from "react-native";
 import { BASE_URL } from "./baseApi";
 import { Album, Artist, Genre, Track } from "@/utils/types";
+import { router } from "expo-router";
 
 interface MusicState {
   tracks: Track[];
@@ -139,18 +140,22 @@ export const useMusicStore = create<MusicState>((set) => ({
     }
   },
 
-  // Add a new track
   addTrack: async (track) => {
     set({ isLoading: true });
+
     try {
       const response = await fetch(`${BASE_URL}/api/tracks`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(track),
       });
-      const data = await response.json();
+      await response.json();
       if (response.ok) {
-        set((state) => ({ tracks: [...state.tracks, data] }));
+        const { fetchTracks } = useMusicStore.getState();
+        await fetchTracks();
+
+        Alert.alert("Success", "Song added successfully!");
+        router.push("..");
       } else {
         Alert.alert("Error", "Failed to add track.");
       }
