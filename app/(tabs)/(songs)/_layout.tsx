@@ -23,6 +23,20 @@ export default function SongLayout() {
           },
         }}
       />
+      <Stack.Screen
+        name="(edit-song)"
+        options={{
+          title: "Edit Song",
+          headerStyle: {
+            backgroundColor: "#1E1E1E",
+          },
+          headerTintColor: "white",
+          headerTitleStyle: {
+            fontWeight: "bold",
+            fontSize: 18,
+          },
+        }}
+      />
     </Stack>
   );
 }

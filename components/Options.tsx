@@ -152,7 +152,10 @@ export const TrackOptions = ({ children, trackId }: TrackOptionsProps) => {
   const handlePressAction = async (id: string) => {
     switch (id) {
       case "edit":
-        console.log("Edit Track " + trackId);
+        router.push({
+          pathname: "/(tabs)/(songs)/(edit-song)/[id]",
+          params: { id: trackId },
+        });
         break;
 
       case "delete":

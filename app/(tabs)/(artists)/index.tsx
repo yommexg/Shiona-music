@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import Spinner from "@/components/Spinner";
 import { useMusicStore } from "@/store/useMusicStore";
+import { StopPropagation } from "@/utils/stopPropagation";
 import { Artist } from "@/utils/types";
 import { Ionicons } from "@expo/vector-icons";
 import { router, useFocusEffect } from "expo-router";
@@ -37,6 +38,16 @@ const ArtistCard = ({ artist }: { artist: Artist }) => {
         <Text style={styles.artistName}>{artist.Name}</Text>
         <Text style={styles.artistSubtitle}>View Albums →</Text>
       </View>
+
+      <StopPropagation>
+        {/* <TrackOptions trackId={track.TrackId}> */}
+        <Ionicons
+          name="ellipsis-vertical"
+          size={18}
+          color="#fff"
+        />
+        {/* </TrackOptions> */}
+      </StopPropagation>
     </TouchableOpacity>
   );
 };

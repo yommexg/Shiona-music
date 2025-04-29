@@ -12,13 +12,20 @@ import RNPickerSelect from "react-native-picker-select";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useMusicStore } from "@/store/useMusicStore";
 import Spinner from "@/components/Spinner";
+import { useLocalSearchParams } from "expo-router";
 
-const AddSong = () => {
-  const { genres, albums, addTrack, isLoading } = useMusicStore();
-  const [title, setTitle] = useState("");
-  const [albumId, setAlbumId] = useState<number | null>(null);
-  const [genreId, setGenreId] = useState<number | null>(null);
-  const [duration, setDuration] = useState("");
+const EditSong = () => {
+  const { id } = useLocalSearchParams();
+  const { genres, albums, editTrack, tracks, isLoading } = useMusicStore();
+
+  const trackId = Number(id);
+
+  const track = tracks.find((track) => track.TrackId === trackId);
+
+  const [title, setTitle] = useState(track?.Title ?? "");
+  const [albumId, setAlbumId] = useState<number | null>(track?.AlbumId ?? null);
+  const [genreId, setGenreId] = useState<number | null>(track?.GenreId ?? null);
+  const [duration, setDuration] = useState(String(track?.Duration ?? ""));
 
   const handleSubmit = async () => {
     if (!title || !albumId || !genreId || !duration) {
@@ -26,19 +33,14 @@ const AddSong = () => {
       return;
     }
 
-    const newSong = {
+    const updateSong = {
       Title: title,
       AlbumId: albumId,
       GenreId: genreId,
       Duration: Number(duration),
     };
 
-    await addTrack(newSong);
-
-    setTitle("");
-    setAlbumId(null);
-    setGenreId(null);
-    setDuration("");
+    await editTrack(updateSong, trackId);
   };
 
   return (
@@ -91,14 +93,14 @@ const AddSong = () => {
         <TouchableOpacity
           style={styles.button}
           onPress={handleSubmit}>
-          <Text style={styles.buttonText}>Add Song</Text>
+          <Text style={styles.buttonText}>Edit Song</Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );
 };
 
-export default AddSong;
+export default EditSong;
 
 const styles = StyleSheet.create({
   container: {

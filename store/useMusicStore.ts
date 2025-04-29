@@ -22,10 +22,35 @@ interface MusicState {
   fetchAlbums: (page?: number, limit?: number) => Promise<void>;
   fetchGenres: (page?: number, limit?: number) => Promise<void>;
   fetchArtists: (page?: number, limit?: number) => Promise<void>;
-  addTrack: (track: any) => Promise<void>;
-  addAlbum: (album: any) => Promise<void>;
-  addGenre: (genre: any) => Promise<void>;
-  addArtist: (artist: any) => Promise<void>;
+  addTrack: (track: {
+    Title: string;
+    Duration: number;
+    AlbumId: number;
+    GenreId: number;
+  }) => Promise<void>;
+  editTrack: (
+    track: {
+      Title: string;
+      Duration: number;
+      AlbumId: number;
+      GenreId: number;
+    },
+    trackId: number
+  ) => Promise<void>;
+  addAlbum: (album: {
+    Title: string;
+    ArtistId: number;
+    ReleaseYear: number;
+  }) => Promise<void>;
+  editAlbum: (album: {
+    Title: string;
+    ArtistId: number;
+    ReleaseYear: number;
+  }) => Promise<void>;
+  addGenre: (genre: { Name: string }) => Promise<void>;
+  editGenre: (genre: { Name: string }) => Promise<void>;
+  addArtist: (artist: { Name: string }) => Promise<void>;
+  editArtist: (artist: { Name: string }) => Promise<void>;
   deleteTrack: (trackId: string) => Promise<void>;
   deleteAlbum: (albumId: string) => Promise<void>;
   deleteGenre: (genreId: string) => Promise<void>;
@@ -82,7 +107,7 @@ export const useMusicStore = create<MusicState>((set) => ({
         set((state) => ({
           albums: page === 1 ? data : [...state.albums, ...data],
           currentPageAlbums: page,
-          totalAlbums: 16,
+          totalAlbums: 25,
         }));
       } else {
         Alert.alert("Error", "Failed to load albums.");
@@ -128,7 +153,7 @@ export const useMusicStore = create<MusicState>((set) => ({
         set((state) => ({
           artists: page === 1 ? data : [...state.artists, ...data],
           currentPageArtists: page,
-          totalArtists: 19,
+          totalArtists: 21,
         }));
       } else {
         Alert.alert("Error", "Failed to load artists.");
@@ -166,18 +191,73 @@ export const useMusicStore = create<MusicState>((set) => ({
     }
   },
 
-  // Add a new album
+  editTrack: async (track, trackId) => {
+    set({ isLoading: true });
+
+    try {
+      const response = await fetch(`${BASE_URL}/api/Tracks/${trackId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ TrackId: trackId, ...track }),
+      });
+
+      if (response.ok) {
+        const { fetchTracks } = useMusicStore.getState();
+        await fetchTracks();
+
+        Alert.alert("Success", "Song Edited successfully!");
+        router.push("..");
+      } else {
+        Alert.alert("Error", "Failed to Edit track.");
+      }
+    } catch (error) {
+      console.log(error);
+      Alert.alert("Error", "Failed to Edit track.");
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
   addAlbum: async (album) => {
     set({ isLoading: true });
     try {
-      const response = await fetch(`${BASE_URL}/api/albums`, {
+      const response = await fetch(`${BASE_URL}/api/Albums`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(album),
       });
-      const data = await response.json();
+      await response.json();
       if (response.ok) {
-        set((state) => ({ albums: [...state.albums, data] }));
+        const { fetchAlbums } = useMusicStore.getState();
+        await fetchAlbums();
+
+        Alert.alert("Success", "Album added successfully!");
+        router.push("..");
+      } else {
+        Alert.alert("Error", "Failed to add album.");
+      }
+    } catch (error) {
+      Alert.alert("Error", "Failed to add album.");
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  editAlbum: async (album) => {
+    set({ isLoading: true });
+    try {
+      const response = await fetch(`${BASE_URL}/api/Albums`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(album),
+      });
+      await response.json();
+      if (response.ok) {
+        const { fetchAlbums } = useMusicStore.getState();
+        await fetchAlbums();
+
+        Alert.alert("Success", "Album added successfully!");
+        router.push("..");
       } else {
         Alert.alert("Error", "Failed to add album.");
       }
@@ -192,14 +272,43 @@ export const useMusicStore = create<MusicState>((set) => ({
   addGenre: async (genre) => {
     set({ isLoading: true });
     try {
-      const response = await fetch(`${BASE_URL}/api/genres`, {
+      const response = await fetch(`${BASE_URL}/api/Genres`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(genre),
       });
-      const data = await response.json();
+      await response.json();
       if (response.ok) {
-        set((state) => ({ genres: [...state.genres, data] }));
+        const { fetchGenres } = useMusicStore.getState();
+        await fetchGenres();
+
+        Alert.alert("Success", "Genre added successfully!");
+        router.push("..");
+      } else {
+        Alert.alert("Error", "Failed to add genre.");
+      }
+    } catch (error) {
+      Alert.alert("Error", "Failed to add genre.");
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  editGenre: async (genre) => {
+    set({ isLoading: true });
+    try {
+      const response = await fetch(`${BASE_URL}/api/Genres`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(genre),
+      });
+      await response.json();
+      if (response.ok) {
+        const { fetchGenres } = useMusicStore.getState();
+        await fetchGenres();
+
+        Alert.alert("Success", "Genre added successfully!");
+        router.push("..");
       } else {
         Alert.alert("Error", "Failed to add genre.");
       }
@@ -214,14 +323,43 @@ export const useMusicStore = create<MusicState>((set) => ({
   addArtist: async (artist) => {
     set({ isLoading: true });
     try {
-      const response = await fetch(`${BASE_URL}/api/artists`, {
+      const response = await fetch(`${BASE_URL}/api/Artists`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(artist),
       });
-      const data = await response.json();
+      await response.json();
       if (response.ok) {
-        set((state) => ({ artists: [...state.artists, data] }));
+        const { fetchArtists } = useMusicStore.getState();
+        await fetchArtists();
+
+        Alert.alert("Success", "Artist added successfully!");
+        router.push("..");
+      } else {
+        Alert.alert("Error", "Failed to add artist.");
+      }
+    } catch (error) {
+      Alert.alert("Error", "Failed to add artist.");
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  editArtist: async (artist) => {
+    set({ isLoading: true });
+    try {
+      const response = await fetch(`${BASE_URL}/api/Artists`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(artist),
+      });
+      await response.json();
+      if (response.ok) {
+        const { fetchArtists } = useMusicStore.getState();
+        await fetchArtists();
+
+        Alert.alert("Success", "Artist added successfully!");
+        router.push("..");
       } else {
         Alert.alert("Error", "Failed to add artist.");
       }
