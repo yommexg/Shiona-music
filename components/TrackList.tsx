@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import { TrackListItem } from "./TrackListItem";
 import { Track } from "@/utils/types";
-import { useMusicStore } from "@/store/useMusicStore";
 
 type TrackListProps = {
   tracks: Track[];

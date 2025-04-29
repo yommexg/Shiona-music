@@ -10,6 +10,12 @@ export default function GenresLayout() {
         }}
       />
       <Stack.Screen
+        name="[id]"
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
         name="(add-genre)"
         options={{
           title: "Add Genre",

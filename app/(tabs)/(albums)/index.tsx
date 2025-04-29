@@ -1,60 +1,18 @@
+import { AlbumList } from "@/components/AlbumList";
 import Header from "@/components/Header";
 import Spinner from "@/components/Spinner";
 import { useMusicStore } from "@/store/useMusicStore";
-import { Album } from "@/utils/types";
-import { Ionicons } from "@expo/vector-icons";
-import { router, useFocusEffect } from "expo-router";
-import { useCallback, useState } from "react";
-import {
-  Alert,
-  BackHandler,
-  FlatList,
-  Text,
-  View,
-  TouchableOpacity,
-  Image,
-  StyleSheet,
-  RefreshControl,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 
-// Album Card Component
-const AlbumCard = ({ album }: { album: Album }) => {
-  return (
-    <TouchableOpacity
-      style={styles.albumCard}
-      onPress={() =>
-        router.push({
-          pathname: "/[id]",
-          params: { id: album.AlbumId },
-        })
-      }>
-      <Ionicons
-        name="albums"
-        size={35}
-        color="white"
-      />
-      <View>
-        <Text style={styles.albumTitle}>{album.Title}</Text>
-        <Text style={styles.artistName}>{album.Artist.Name}</Text>
-        <Text style={styles.releaseYear}>{album.ReleaseYear}</Text>
-      </View>
-    </TouchableOpacity>
-  );
-};
+import { useFocusEffect } from "expo-router";
+import { useCallback } from "react";
+import { Alert, BackHandler, View, StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function AlbumScreen() {
   const { isLoading, fetchAlbums, albums, currentPageAlbums, totalAlbums } =
     useMusicStore();
-  const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = async () => await fetchAlbums(1, 10);
-
-  const handleRefresh = async () => {
-    setRefreshing(true);
-    await onRefresh();
-    setRefreshing(false);
-  };
 
   const loadMoreAlbums = async () => {
     if (!isLoading && albums.length < totalAlbums) {
@@ -79,37 +37,16 @@ export default function AlbumScreen() {
     }, [])
   );
 
-  const renderAlbum = ({ item }: { item: Album }) => <AlbumCard album={item} />;
-
   return (
     <SafeAreaView style={styles.container}>
       {isLoading && <Spinner />}
       <Header />
       <View style={styles.albumListWrapper}>
-        <FlatList
-          data={albums}
-          renderItem={renderAlbum}
-          keyExtractor={(item) => item.AlbumId.toString()}
-          contentContainerStyle={styles.listContainer}
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={handleRefresh}
-            />
-          }
-          showsVerticalScrollIndicator={false}
-          onEndReached={loadMoreAlbums}
-          onEndReachedThreshold={0.5}
-          ListEmptyComponent={
-            <View style={styles.emptyContainer}>
-              <Ionicons
-                name="albums"
-                size={60}
-                color="white"
-              />
-              <Text style={styles.emptyText}>No Album Available 📂</Text>
-            </View>
-          }
+        <AlbumList
+          albums={albums}
+          pathname="./[id]"
+          loadMoreAlbums={loadMoreAlbums}
+          onRefresh={onRefresh}
         />
       </View>
     </SafeAreaView>
@@ -128,45 +65,5 @@ const styles = StyleSheet.create({
     height: "80%",
     paddingHorizontal: 20,
     paddingBottom: 50,
-  },
-  listContainer: {
-    paddingTop: 10,
-    paddingBottom: 128,
-  },
-  emptyContainer: {
-    justifyContent: "center",
-    alignItems: "center",
-    paddingVertical: 40,
-    gap: 20,
-  },
-  emptyImage: {
-    width: 80,
-    height: 80,
-  },
-  emptyText: {
-    color: "white",
-    fontSize: 18,
-  },
-  albumCard: {
-    backgroundColor: "#3a2e2e",
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 16,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 20,
-  },
-  albumTitle: {
-    color: "#fff",
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  artistName: {
-    color: "#fff",
-    fontSize: 14,
-  },
-  releaseYear: {
-    color: "#fff",
-    fontSize: 12,
   },
 });

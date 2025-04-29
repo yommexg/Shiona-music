@@ -2,7 +2,7 @@ import Header from "@/components/Header";
 import { useMusicStore } from "@/store/useMusicStore";
 import { Genre } from "@/utils/types";
 import { FontAwesome } from "@expo/vector-icons";
-import { useFocusEffect } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import {
   Alert,
@@ -11,18 +11,21 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Image,
   StyleSheet,
   RefreshControl,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-// Genre Card Component
 const GenreCard = ({ genre }: { genre: Genre }) => {
   return (
     <TouchableOpacity
       style={styles.genreCard}
-      onPress={() => {}}>
+      onPress={() => {
+        router.push({
+          pathname: "/[id]",
+          params: { id: genre.GenreId },
+        });
+      }}>
       <FontAwesome
         name="book"
         size={32}

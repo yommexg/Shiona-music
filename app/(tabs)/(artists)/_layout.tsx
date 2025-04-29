@@ -11,6 +11,20 @@ export default function AlbumLayout() {
       />
 
       <Stack.Screen
+        name="[id]"
+        options={{
+          headerShown: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="(album-artist)"
+        options={{
+          headerShown: false,
+        }}
+      />
+
+      <Stack.Screen
         name="(add-artist)"
         options={{
           title: "Add Artist",
