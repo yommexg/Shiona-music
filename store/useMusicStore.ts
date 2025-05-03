@@ -156,7 +156,7 @@ export const useMusicStore = create<MusicState>((set) => ({
         set((state) => ({
           artists: page === 1 ? data : [...state.artists, ...data],
           currentPageArtists: page,
-          totalArtists: 21,
+          totalArtists: 10,
         }));
       } else {
         Alert.alert("Error", "Failed to load artists.");
@@ -183,9 +183,7 @@ export const useMusicStore = create<MusicState>((set) => ({
         await fetchTracks();
 
         Alert.alert("Success", "Song added successfully!");
-        router.push({
-          pathname: "/(tabs)/(songs)",
-        });
+        router.push("..");
       } else {
         Alert.alert("Error", "Failed to add track.");
       }
@@ -239,9 +237,7 @@ export const useMusicStore = create<MusicState>((set) => ({
         await fetchAlbums();
 
         Alert.alert("Success", "Album added successfully!");
-        router.push({
-          pathname: "/(tabs)/(albums)",
-        });
+        router.push("..");
       } else {
         Alert.alert("Error", "Failed to add album.");
       }
@@ -294,9 +290,7 @@ export const useMusicStore = create<MusicState>((set) => ({
         await fetchGenres();
 
         Alert.alert("Success", "Genre added successfully!");
-        router.push({
-          pathname: "/(tabs)/(genres)",
-        });
+        router.push("..");
       } else {
         Alert.alert("Error", "Failed to add genre.");
       }
@@ -349,9 +343,7 @@ export const useMusicStore = create<MusicState>((set) => ({
         await fetchArtists();
 
         Alert.alert("Success", "Artist added successfully!");
-        router.push({
-          pathname: "/(tabs)/(artists)",
-        });
+        router.push("..");
       } else {
         Alert.alert("Error", "Failed to add artist.");
       }
@@ -460,13 +452,17 @@ export const useMusicStore = create<MusicState>((set) => ({
   deleteArtist: async (artistId) => {
     set({ isLoading: true });
     try {
-      const response = await fetch(`${BASE_URL}/api/artists/${artistId}`, {
+      const response = await fetch(`${BASE_URL}/api/Artists/${artistId}`, {
         method: "DELETE",
       });
       if (response.ok) {
-        // set((state) => ({
-        //   artists: state.artists.filter((artist) => artist.id !== artistId),
-        // }));
+        const { fetchArtists } = useMusicStore.getState();
+        await fetchArtists();
+
+        Alert.alert("Success", "Artist Deleted successfully!");
+        router.push({
+          pathname: "/(tabs)/(artists)",
+        });
       } else {
         Alert.alert("Error", "Failed to delete artist.");
       }
