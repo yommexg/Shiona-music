@@ -1,5 +1,5 @@
 import { Text, View } from "react-native";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useState } from "react";
 import {
   Menu,
   MenuOptions,
@@ -11,6 +11,8 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useAudioStore } from "@/store/useAudioStore";
 import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import { useMusicStore } from "@/store/useMusicStore";
+import ConfirmDelete from "./ConfirmDelete";
 
 type MusicOptionsProps = PropsWithChildren<{}>;
 
@@ -149,7 +151,18 @@ type TrackOptionsProps = PropsWithChildren<{
 }>;
 
 export const TrackOptions = ({ children, trackId }: TrackOptionsProps) => {
+  const { tracks, deleteTrack } = useMusicStore();
+  const { currentTrack, stopMusic } = useAudioStore();
+
+  const [showConfirm, setShowConfirm] = useState(false);
+
+  const selectedTrack = tracks.find((track) => track.TrackId === trackId);
+
   const handlePressAction = async (id: string) => {
+    if (currentTrack?.TrackId === trackId) {
+      stopMusic();
+    }
+
     switch (id) {
       case "edit":
         router.push({
@@ -159,7 +172,225 @@ export const TrackOptions = ({ children, trackId }: TrackOptionsProps) => {
         break;
 
       case "delete":
-        console.log("Delete Track " + trackId);
+        setShowConfirm(true);
+        break;
+      default:
+        console.warn(`Unknown menu action ${id}`);
+        break;
+    }
+  };
+
+  const confirmDelete = async () => {
+    setShowConfirm(false);
+    deleteTrack(trackId);
+  };
+
+  return (
+    <>
+      <Menu>
+        <MenuTrigger
+          customStyles={{
+            triggerWrapper: {
+              padding: 2,
+            },
+          }}>
+          {children}
+        </MenuTrigger>
+        <MenuOptions
+          customStyles={{
+            optionsContainer: {
+              padding: 10,
+              borderRadius: 8,
+              backgroundColor: "#1E1E1E",
+            },
+          }}>
+          <View style={{ gap: 10 }}>
+            <MenuOption onSelect={() => handlePressAction("edit")}>
+              <Text
+                style={{
+                  fontSize: 14,
+                  color: "white",
+                }}>
+                Edit
+              </Text>
+            </MenuOption>
+            <MenuOption onSelect={() => handlePressAction("delete")}>
+              <Text
+                style={{
+                  fontSize: 14,
+                  color: "white",
+                }}>
+                Delete
+              </Text>
+            </MenuOption>
+          </View>
+        </MenuOptions>
+      </Menu>
+      <ConfirmDelete
+        visible={showConfirm}
+        onCancel={() => setShowConfirm(false)}
+        onConfirm={confirmDelete}
+        title={`"${selectedTrack?.Title}"` + " track"}
+      />
+    </>
+  );
+};
+
+// Artist Options
+type ArtistOptionsProps = PropsWithChildren<{
+  artistId: number;
+}>;
+
+export const ArtistOptions = ({ children, artistId }: ArtistOptionsProps) => {
+  const handlePressAction = async (id: string) => {
+    switch (id) {
+      case "edit":
+        router.push({
+          pathname: "/(tabs)/(artists)/(edit-artist)/[id]",
+          params: { id: artistId },
+        });
+        break;
+
+      case "delete":
+        console.log("Delete Track " + artistId);
+
+        break;
+
+      default:
+        console.warn(`Unknown menu action ${id}`);
+        break;
+    }
+  };
+
+  return (
+    <Menu>
+      <MenuTrigger
+        customStyles={{
+          triggerWrapper: {
+            padding: 2,
+          },
+        }}>
+        {children}
+      </MenuTrigger>
+      <MenuOptions
+        customStyles={{
+          optionsContainer: {
+            padding: 10,
+            borderRadius: 8,
+            backgroundColor: "#1E1E1E",
+          },
+        }}>
+        <View style={{ gap: 10 }}>
+          <MenuOption onSelect={() => handlePressAction("edit")}>
+            <Text
+              style={{
+                fontSize: 14,
+                color: "white",
+              }}>
+              Edit
+            </Text>
+          </MenuOption>
+          <MenuOption onSelect={() => handlePressAction("delete")}>
+            <Text
+              style={{
+                fontSize: 14,
+                color: "white",
+              }}>
+              Delete
+            </Text>
+          </MenuOption>
+        </View>
+      </MenuOptions>
+    </Menu>
+  );
+};
+
+// Album Options
+type AlbumOptionsProps = PropsWithChildren<{
+  albumId: number;
+}>;
+
+export const AlbumOptions = ({ children, albumId }: AlbumOptionsProps) => {
+  const handlePressAction = async (id: string) => {
+    switch (id) {
+      case "edit":
+        router.push({
+          pathname: "/(tabs)/(albums)/(edit-album)/[id]",
+          params: { id: albumId },
+        });
+        break;
+
+      case "delete":
+        console.log("Delete Track " + albumId);
+
+        break;
+
+      default:
+        console.warn(`Unknown menu action ${id}`);
+        break;
+    }
+  };
+
+  return (
+    <Menu>
+      <MenuTrigger
+        customStyles={{
+          triggerWrapper: {
+            padding: 2,
+          },
+        }}>
+        {children}
+      </MenuTrigger>
+      <MenuOptions
+        customStyles={{
+          optionsContainer: {
+            padding: 10,
+            borderRadius: 8,
+            backgroundColor: "#1E1E1E",
+          },
+        }}>
+        <View style={{ gap: 10 }}>
+          <MenuOption onSelect={() => handlePressAction("edit")}>
+            <Text
+              style={{
+                fontSize: 14,
+                color: "white",
+              }}>
+              Edit
+            </Text>
+          </MenuOption>
+          <MenuOption onSelect={() => handlePressAction("delete")}>
+            <Text
+              style={{
+                fontSize: 14,
+                color: "white",
+              }}>
+              Delete
+            </Text>
+          </MenuOption>
+        </View>
+      </MenuOptions>
+    </Menu>
+  );
+};
+
+//Genre Options
+type GerneOptionsProps = PropsWithChildren<{
+  genreId: number;
+}>;
+
+export const GenreOptions = ({ children, genreId }: GerneOptionsProps) => {
+  const handlePressAction = async (id: string) => {
+    switch (id) {
+      case "edit":
+        router.push({
+          pathname: "/(tabs)/(genres)/(edit-genre)/[id]",
+          params: { id: genreId },
+        });
+        break;
+
+      case "delete":
+        console.log("Delete Track " + genreId);
 
         break;
 

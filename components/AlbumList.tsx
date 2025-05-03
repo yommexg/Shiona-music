@@ -11,6 +11,8 @@ import {
 import { Album } from "@/utils/types";
 import { Ionicons } from "@expo/vector-icons";
 import { ExternalPathString, RelativePathString, router } from "expo-router";
+import { AlbumOptions } from "./Options";
+import { StopPropagation } from "@/utils/stopPropagation";
 
 type AlbumListProps = {
   albums: Album[];
@@ -35,15 +37,28 @@ const AlbumCard = ({
           params: { id: album.AlbumId },
         })
       }>
-      <Ionicons
-        name="albums"
-        size={35}
-        color="white"
-      />
+      <View style={{ flexDirection: "row", alignItems: "center", gap: 20 }}>
+        <Ionicons
+          name="albums"
+          size={35}
+          color="white"
+        />
+        <View>
+          <Text style={styles.albumTitle}>{album.Title}</Text>
+          <Text style={styles.artistName}>{album.Artist.Name}</Text>
+          <Text style={styles.releaseYear}>{album.ReleaseYear}</Text>
+        </View>
+      </View>
       <View>
-        <Text style={styles.albumTitle}>{album.Title}</Text>
-        <Text style={styles.artistName}>{album.Artist.Name}</Text>
-        <Text style={styles.releaseYear}>{album.ReleaseYear}</Text>
+        <StopPropagation>
+          <AlbumOptions albumId={album.AlbumId}>
+            <Ionicons
+              name="ellipsis-vertical"
+              size={18}
+              color="#fff"
+            />
+          </AlbumOptions>
+        </StopPropagation>
       </View>
     </TouchableOpacity>
   );
@@ -127,6 +142,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 20,
+    justifyContent: "space-between",
   },
   albumTitle: {
     color: "#fff",

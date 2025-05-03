@@ -38,6 +38,20 @@ export default function AlbumLayout() {
           },
         }}
       />
+      <Stack.Screen
+        name="(edit-artist)"
+        options={{
+          title: "Edit Artist",
+          headerStyle: {
+            backgroundColor: "#1E1E1E",
+          },
+          headerTintColor: "white",
+          headerTitleStyle: {
+            fontWeight: "bold",
+            fontSize: 18,
+          },
+        }}
+      />
     </Stack>
   );
 }

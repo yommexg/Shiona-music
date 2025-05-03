@@ -1,7 +1,9 @@
 import Header from "@/components/Header";
+import { GenreOptions } from "@/components/Options";
 import { useMusicStore } from "@/store/useMusicStore";
+import { StopPropagation } from "@/utils/stopPropagation";
 import { Genre } from "@/utils/types";
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import {
@@ -26,6 +28,18 @@ const GenreCard = ({ genre }: { genre: Genre }) => {
           params: { id: genre.GenreId },
         });
       }}>
+      <View style={styles.menuContainer}>
+        <StopPropagation>
+          <GenreOptions genreId={genre.GenreId}>
+            <Ionicons
+              name="ellipsis-vertical"
+              size={18}
+              color="#fff"
+            />
+          </GenreOptions>
+        </StopPropagation>
+      </View>
+
       <FontAwesome
         name="book"
         size={32}
@@ -128,7 +142,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 16,
     justifyContent: "center",
-    gap: 10,
     alignItems: "center",
     marginHorizontal: 5,
     height: 140,
@@ -137,12 +150,13 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 4,
     shadowOffset: { width: 0, height: 2 },
+    position: "relative",
   },
-  genreImage: {
-    width: 45,
-    height: 45,
-    marginBottom: 10,
-    tintColor: "white",
+  menuContainer: {
+    position: "absolute",
+    top: 10,
+    left: 10,
+    zIndex: 10,
   },
   genreName: {
     color: "#fff",
@@ -155,10 +169,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 40,
     gap: 20,
-  },
-  emptyImage: {
-    width: 80,
-    height: 80,
   },
   emptyText: {
     color: "white",

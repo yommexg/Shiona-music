@@ -1,6 +1,6 @@
 import { Stack } from "expo-router";
 
-export default function EditSongLayout() {
+export default function EditGenreLayout() {
   return (
     <Stack>
       <Stack.Screen

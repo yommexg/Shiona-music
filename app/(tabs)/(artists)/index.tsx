@@ -1,4 +1,5 @@
 import Header from "@/components/Header";
+import { ArtistOptions } from "@/components/Options";
 import Spinner from "@/components/Spinner";
 import { useMusicStore } from "@/store/useMusicStore";
 import { StopPropagation } from "@/utils/stopPropagation";
@@ -40,13 +41,13 @@ const ArtistCard = ({ artist }: { artist: Artist }) => {
       </View>
 
       <StopPropagation>
-        {/* <TrackOptions trackId={track.TrackId}> */}
-        <Ionicons
-          name="ellipsis-vertical"
-          size={18}
-          color="#fff"
-        />
-        {/* </TrackOptions> */}
+        <ArtistOptions artistId={artist.ArtistId}>
+          <Ionicons
+            name="ellipsis-vertical"
+            size={18}
+            color="#fff"
+          />
+        </ArtistOptions>
       </StopPropagation>
     </TouchableOpacity>
   );

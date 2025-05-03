@@ -29,6 +29,20 @@ export default function AlbumLayout() {
           },
         }}
       />
+      <Stack.Screen
+        name="(edit-album)"
+        options={{
+          title: "Edit Album",
+          headerStyle: {
+            backgroundColor: "#1E1E1E",
+          },
+          headerTintColor: "white",
+          headerTitleStyle: {
+            fontWeight: "bold",
+            fontSize: 18,
+          },
+        }}
+      />
     </Stack>
   );
 }

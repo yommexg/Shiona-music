@@ -29,6 +29,20 @@ export default function GenresLayout() {
           },
         }}
       />
+      <Stack.Screen
+        name="(edit-genre)"
+        options={{
+          title: "Edit Genre",
+          headerStyle: {
+            backgroundColor: "#1E1E1E",
+          },
+          headerTintColor: "white",
+          headerTitleStyle: {
+            fontWeight: "bold",
+            fontSize: 18,
+          },
+        }}
+      />
     </Stack>
   );
 }
