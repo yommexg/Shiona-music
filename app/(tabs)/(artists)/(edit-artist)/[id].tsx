@@ -47,7 +47,7 @@ const EditArtist = () => {
         <TouchableOpacity
           style={styles.button}
           onPress={handleSubmit}>
-          <Text style={styles.buttonText}>Edit Artist Name</Text>
+          <Text style={styles.buttonText}>Update Artist Name</Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>

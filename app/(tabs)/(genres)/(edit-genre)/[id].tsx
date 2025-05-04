@@ -47,7 +47,7 @@ const EditGenre = () => {
         <TouchableOpacity
           style={styles.button}
           onPress={handleSubmit}>
-          <Text style={styles.buttonText}>Edit Genre Name</Text>
+          <Text style={styles.buttonText}>Update Genre Name</Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>

@@ -93,7 +93,7 @@ const EditSong = () => {
         <TouchableOpacity
           style={styles.button}
           onPress={handleSubmit}>
-          <Text style={styles.buttonText}>Edit Song</Text>
+          <Text style={styles.buttonText}>Update Song</Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>

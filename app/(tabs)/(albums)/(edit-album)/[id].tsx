@@ -12,13 +12,22 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Picker } from "@react-native-picker/picker";
 import { useMusicStore } from "@/store/useMusicStore";
 import Spinner from "@/components/Spinner";
+import { useLocalSearchParams } from "expo-router";
 
 const EditAlbum = () => {
-  const { artists, editAlbum, isLoading } = useMusicStore();
+  const { albums, artists, editAlbum, isLoading } = useMusicStore();
+  const { id } = useLocalSearchParams();
 
-  const [title, setTitle] = useState("");
-  const [artistId, setArtistId] = useState<number | null>(null);
-  const [releaseYear, setReleaseYear] = useState("");
+  const albumId = Number(id);
+  const album = albums.find((album) => album.AlbumId === albumId);
+
+  const [title, setTitle] = useState(album?.Title ?? "");
+  const [artistId, setArtistId] = useState<number | null>(
+    album?.ArtistId ?? null
+  );
+  const [releaseYear, setReleaseYear] = useState<number | null>(
+    album?.ReleaseYear ?? null
+  );
 
   const handleSubmit = async () => {
     if (!title || !artistId || !releaseYear) {
@@ -29,10 +38,10 @@ const EditAlbum = () => {
     const newAlbum = {
       Title: title,
       ArtistId: artistId,
-      ReleaseYear: parseInt(releaseYear),
+      ReleaseYear: releaseYear,
     };
 
-    await editAlbum(newAlbum);
+    await editAlbum(newAlbum, albumId);
   };
 
   return (
@@ -73,7 +82,7 @@ const EditAlbum = () => {
           style={styles.picker}>
           <Picker.Item
             label="Select year"
-            value=""
+            value={null}
           />
           {Array.from({ length: 50 }, (_, i) => {
             const year = new Date().getFullYear() - i;
@@ -81,7 +90,7 @@ const EditAlbum = () => {
               <Picker.Item
                 key={year}
                 label={year.toString()}
-                value={year.toString()}
+                value={year}
               />
             );
           })}
@@ -89,7 +98,7 @@ const EditAlbum = () => {
 
         <View style={styles.buttonContainer}>
           <Button
-            title="Add Album"
+            title="Update Album"
             onPress={handleSubmit}
             color="red"
           />
