@@ -213,11 +213,11 @@ export const useMusicStore = create<MusicState>((set) => ({
           pathname: "/(tabs)/(songs)",
         });
       } else {
-        Alert.alert("Error", "Failed to Edit track.");
+        Alert.alert("Error", "Failed to Update track.");
       }
     } catch (error) {
       console.log(error);
-      Alert.alert("Error", "Failed to Edit track.");
+      Alert.alert("Error", "Failed to Update track.");
     } finally {
       set({ isLoading: false });
     }
@@ -320,10 +320,10 @@ export const useMusicStore = create<MusicState>((set) => ({
           pathname: "/(tabs)/(genres)",
         });
       } else {
-        Alert.alert("Error", "Failed to add genre.");
+        Alert.alert("Error", "Failed to update genre.");
       }
     } catch (error) {
-      Alert.alert("Error", "Failed to add genre.");
+      Alert.alert("Error", "Failed to update genre.");
     } finally {
       set({ isLoading: false });
     }
@@ -373,10 +373,10 @@ export const useMusicStore = create<MusicState>((set) => ({
           pathname: "/(tabs)/(artists)",
         });
       } else {
-        Alert.alert("Error", "Failed to edit artist.");
+        Alert.alert("Error", "Failed to update artist.");
       }
     } catch (error) {
-      Alert.alert("Error", "Failed to edit artist.");
+      Alert.alert("Error", "Failed to update artist.");
     } finally {
       set({ isLoading: false });
     }
@@ -436,13 +436,17 @@ export const useMusicStore = create<MusicState>((set) => ({
   deleteGenre: async (genreId) => {
     set({ isLoading: true });
     try {
-      const response = await fetch(`${BASE_URL}/api/genres/${genreId}`, {
+      const response = await fetch(`${BASE_URL}/api/Genres/${genreId}`, {
         method: "DELETE",
       });
       if (response.ok) {
-        // set((state) => ({
-        //   genres: state.genres.filter((genre) => genre.id !== genreId),
-        // }));
+        const { fetchGenres } = useMusicStore.getState();
+        await fetchGenres();
+
+        Alert.alert("Success", "Genre Deleted successfully!");
+        router.push({
+          pathname: "/(tabs)/(genres)",
+        });
       } else {
         Alert.alert("Error", "Failed to delete genre.");
       }

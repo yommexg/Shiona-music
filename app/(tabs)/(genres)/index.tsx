@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import { GenreOptions } from "@/components/Options";
+import Spinner from "@/components/Spinner";
 import { useMusicStore } from "@/store/useMusicStore";
 import { StopPropagation } from "@/utils/stopPropagation";
 import { Genre } from "@/utils/types";
@@ -90,6 +91,7 @@ export default function GenreScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      {isLoading && <Spinner />}
       <Header />
       <FlatList
         data={genres}
@@ -151,6 +153,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     shadowOffset: { width: 0, height: 2 },
     position: "relative",
+    gap: 10,
   },
   menuContainer: {
     position: "absolute",

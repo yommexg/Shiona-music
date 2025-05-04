@@ -339,10 +339,10 @@ export const AlbumOptions = ({ children, albumId }: AlbumOptionsProps) => {
 
   const selectedAlbum = albums.find((album) => album.AlbumId === albumId);
 
-  const selectedAlbumTack = tracks.find((track) => track.AlbumId === albumId);
+  const selectedAlbumTrack = tracks.find((track) => track.AlbumId === albumId);
 
   const handlePressAction = async (id: string) => {
-    if (currentTrack?.TrackId === selectedAlbumTack?.TrackId) {
+    if (currentTrack?.TrackId === selectedAlbumTrack?.TrackId) {
       stopMusic();
     }
 
@@ -425,7 +425,19 @@ type GerneOptionsProps = PropsWithChildren<{
 }>;
 
 export const GenreOptions = ({ children, genreId }: GerneOptionsProps) => {
+  const { genres, deleteGenre, tracks } = useMusicStore();
+  const { stopMusic, currentTrack } = useAudioStore();
+
+  const [showConfirm, setShowConfirm] = useState(false);
+
+  const selectedGenre = genres.find((genre) => genre.GenreId === genreId);
+
+  const selectedGenreTrack = tracks.find((track) => track.GenreId === genreId);
+
   const handlePressAction = async (id: string) => {
+    if (currentTrack?.TrackId === selectedGenreTrack?.TrackId) {
+      stopMusic();
+    }
     switch (id) {
       case "edit":
         router.push({
@@ -435,8 +447,7 @@ export const GenreOptions = ({ children, genreId }: GerneOptionsProps) => {
         break;
 
       case "delete":
-        console.log("Delete Track " + genreId);
-
+        setShowConfirm(true);
         break;
 
       default:
@@ -445,45 +456,58 @@ export const GenreOptions = ({ children, genreId }: GerneOptionsProps) => {
     }
   };
 
+  const confirmDelete = async () => {
+    setShowConfirm(false);
+    deleteGenre(genreId);
+  };
+
   return (
-    <Menu>
-      <MenuTrigger
-        customStyles={{
-          triggerWrapper: {
-            padding: 2,
-          },
-        }}>
-        {children}
-      </MenuTrigger>
-      <MenuOptions
-        customStyles={{
-          optionsContainer: {
-            padding: 10,
-            borderRadius: 8,
-            backgroundColor: "#1E1E1E",
-          },
-        }}>
-        <View style={{ gap: 10 }}>
-          <MenuOption onSelect={() => handlePressAction("edit")}>
-            <Text
-              style={{
-                fontSize: 14,
-                color: "white",
-              }}>
-              Edit
-            </Text>
-          </MenuOption>
-          <MenuOption onSelect={() => handlePressAction("delete")}>
-            <Text
-              style={{
-                fontSize: 14,
-                color: "white",
-              }}>
-              Delete
-            </Text>
-          </MenuOption>
-        </View>
-      </MenuOptions>
-    </Menu>
+    <>
+      <Menu>
+        <MenuTrigger
+          customStyles={{
+            triggerWrapper: {
+              padding: 2,
+            },
+          }}>
+          {children}
+        </MenuTrigger>
+        <MenuOptions
+          customStyles={{
+            optionsContainer: {
+              padding: 10,
+              borderRadius: 8,
+              backgroundColor: "#1E1E1E",
+            },
+          }}>
+          <View style={{ gap: 10 }}>
+            <MenuOption onSelect={() => handlePressAction("edit")}>
+              <Text
+                style={{
+                  fontSize: 14,
+                  color: "white",
+                }}>
+                Edit
+              </Text>
+            </MenuOption>
+            <MenuOption onSelect={() => handlePressAction("delete")}>
+              <Text
+                style={{
+                  fontSize: 14,
+                  color: "white",
+                }}>
+                Delete
+              </Text>
+            </MenuOption>
+          </View>
+        </MenuOptions>
+      </Menu>
+      <ConfirmDelete
+        visible={showConfirm}
+        onCancel={() => setShowConfirm(false)}
+        onConfirm={confirmDelete}
+        title={`"${selectedGenre?.Name}"` + " genre"}
+      />
+    </>
   );
 };
